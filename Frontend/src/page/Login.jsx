@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../utils/styles";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import { useMutation } from "react-query"
 import * as apiClient from "../api/api-Client"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from "react-redux";
 
 const Login = () => {
     const [ visible, setVisible ] = useState( false );
@@ -16,6 +17,16 @@ const Login = () => {
         handleSubmit,
         formState: { errors },
     } = useForm()
+
+    const { isAuthenticated } = useSelector( ( state ) => state.user );
+    console.log( isAuthenticated );
+    useEffect( () => {
+        if ( isAuthenticated === true )
+        {
+            navigate( "/" );
+        }
+    }, [ isAuthenticated ] )
+
 
     const { mutate } = useMutation( apiClient.Login, {
         onError: ( error ) => {
@@ -143,7 +154,7 @@ const Login = () => {
                             </div>
                             <div className={ `${ styles.noramlFlex } w-full` }>
                                 <h4>Not have any account?</h4>
-                                <Link to="/register" className="text-blue-600 pl-2">
+                                <Link to="/sign-up" className="text-blue-600 pl-2">
                                     Sign Up
                                 </Link>
                             </div>

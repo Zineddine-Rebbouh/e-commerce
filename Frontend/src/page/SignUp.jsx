@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../utils/styles";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,11 +7,11 @@ import { useForm } from "react-hook-form"
 import { useMutation } from "react-query"
 import * as apiClient from "../api/api-Client"
 import { ToastContainer, toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 
 const Singup = () => {
 
-    const navigate = useNavigate()
 
     const [ visible1, setVisible1 ] = useState( false );
     const [ visible2, setVisible2 ] = useState( false );
@@ -24,11 +24,22 @@ const Singup = () => {
         formState: { errors },
     } = useForm()
 
+    const navigate = useNavigate();
+    const { isAuthenticated } = useSelector( ( state ) => state.user );
+
+    useEffect( () => {
+        if ( isAuthenticated === true )
+        {
+            navigate( "/" );
+        }
+    }, [] )
+
+
     const { mutate } = useMutation( apiClient.register, {
         onError: ( error ) => {
             toast.error( error.message, {
                 position: "top-center",
-                autoClose: 5000,
+                autoClose: 2200,
             } );
         }
         , onSuccess: async () => {
@@ -40,7 +51,7 @@ const Singup = () => {
             } );
 
             setTimeout( () => {
-                navigate( "/login" )
+                navigate( "/sign-in" )
             }, 2200 )
 
         },
@@ -81,7 +92,7 @@ const Singup = () => {
             <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
                 <ToastContainer
                     position="top-center"
-                    autoClose={ 5000 }
+                    autoClose={ 2200 }
                 />
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -249,7 +260,7 @@ const Singup = () => {
                             </div>
                             <div className={ `${ styles.noramlFlex } w-full` }>
                                 <h4>Already have an account?</h4>
-                                <Link to="/login" className="text-blue-600 pl-2">
+                                <Link to="/sign-in" className="text-blue-600 pl-2">
                                     Sign In
                                 </Link>
                             </div>

@@ -29,7 +29,7 @@ const login = async (req, res) => {
       })
     }
     // Sign JSON Web Token
-    const token = await jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     })
 
@@ -86,7 +86,6 @@ const register = async (req, res) => {
       secure: process.env.PROJECT_STATUS === "production", // to force https (if you use it)
       maxAge: 86400000, // ttl in seconds (remove this option and cookie will die when browser is closed)
     }
-    console.log(token)
     res.cookie("auth_token", token, cookieConfig)
     return res.status(201).send({ message: "registration success " })
   } catch (err) {
@@ -95,6 +94,15 @@ const register = async (req, res) => {
   }
 }
 
+const logout = async (req, res) => {
+  try {
+    res.clearCookie("auth_token")
+    return res.status(200).send({ message: "Logout success" })
+  } catch (error) {
+    console.error("Error during Logout:", error)
+    return res.status(500).json({ message: "Internal server error" })
+  }
+}
 // Path: Backend/src/controllers/profileController.js
 // Compare this snippet from Backend/src/routes/profileRoutes.js:
 
@@ -112,4 +120,4 @@ const uploadImage = async file => {
   }
 }
 
-module.exports = { login, register }
+module.exports = { login, register, logout }

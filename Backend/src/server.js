@@ -10,9 +10,8 @@ const authRoutes = require("./routes/authRoutes")
 const path = require("path")
 const cloudinary = require("cloudinary").v2
 
-// Remove the unnecessary body-parser import and usage
+const userRoutes = require("./routes/userRoutes")
 
-// Use middleware in the correct order
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -20,17 +19,14 @@ app.use(
   })
 )
 app.use(express.json())
-//  the middleware parses this URL-encoded data and exposes it on the req.body object,
-// making it easier to access and work with in the subsequent route handlers.
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-// Serve static files from the specified directories
 app.use(express.static(path.join(__dirname, "public")))
 app.use(express.static(path.join(__dirname, "uploads")))
 
-// Use the authRoutes for handling authentication-related endpoints
 app.use("/api/auth", authRoutes)
+app.use("/api/user", userRoutes)
 
 // Connect to MongoDB
 mongoose

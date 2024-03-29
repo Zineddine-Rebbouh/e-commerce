@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const { register, login } = require("../controllers/authController")
+const { register, login, logout } = require("../controllers/authController")
 const { check, body } = require("express-validator")
 const multer = require("multer")
 const { validateToken } = require("../middelware/validateToken")
@@ -36,7 +36,6 @@ router.post(
         return true
       })
       .withMessage("Passwords do not match"),
-    body("avatar").notEmpty().withMessage("Avatar is required"),
   ],
   register
 )
@@ -51,5 +50,7 @@ router.post(
   ],
   login
 )
+
+router.get("/logout", validateToken, logout)
 
 module.exports = router

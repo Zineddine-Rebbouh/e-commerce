@@ -2,14 +2,14 @@ import React from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
 const Avatar = ( { src } ) => {
+    const data = src;
+    console.log( data );
     if ( src )
     {
         return <img
             src={ src }
             alt="Avatar"
-            className='rounded-full'
-            height={ 40 }
-            width={ 40 }
+            className='w-[60px] h-[60px] rounded-full border-[3px]'
         />;
     }
     return <FaUserCircle size={ 32 } />;

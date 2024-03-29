@@ -7,7 +7,6 @@ import Container from "../../layout/Container";
 const BestDeals = () => {
     const [ data, setData ] = useState( null ); // Remove the empty array initialization
 
-    console.log( productData );
     useEffect( () => {
         const sortedData = productData?.sort( ( a, b ) => b.total_sell - a.total_sell ); // Correct the sorting logic based on total_sell
         const firstFive = sortedData && sortedData.slice( 0, 5 );
