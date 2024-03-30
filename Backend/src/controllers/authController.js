@@ -29,7 +29,7 @@ const login = async (req, res) => {
       })
     }
     // Sign JSON Web Token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1d",
     })
 
@@ -73,11 +73,13 @@ const register = async (req, res) => {
     user.password = await bcrypt.hash(password, salt)
     if (req.file) {
       user.avatar = await uploadImage(req.file) // Assuming Multer has stored the file path in 'req.file.path'
+    } else {
+      user.avatar = null
     }
     await user.save()
 
     // creating token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1d",
     })
 

@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema(
       min: 6,
       max: 1024,
     },
+    role: {
+      type: String,
+      required: false,
+      enum: ["Admin", "Customer", "Seller"],
+      default: "Customer",
+    },
     avatar: {
       type: String,
       required: false,

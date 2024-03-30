@@ -9,7 +9,7 @@ const Avatar = ( { src } ) => {
         return <img
             src={ src }
             alt="Avatar"
-            className='w-[60px] h-[60px] rounded-full border-[3px]'
+            className='w-[50px] h-[50px] rounded-full border-[1px]'
         />;
     }
     return <FaUserCircle size={ 32 } />;

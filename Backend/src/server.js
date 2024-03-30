@@ -11,6 +11,7 @@ const path = require("path")
 const cloudinary = require("cloudinary").v2
 
 const userRoutes = require("./routes/userRoutes")
+const ErrorHandler = require("./utils/ErrorHandler")
 
 app.use(
   cors({
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, "uploads")))
 
 app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
+app.use(ErrorHandler)
 
 // Connect to MongoDB
 mongoose

@@ -8,6 +8,7 @@ const path = require("path")
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    s
     // Specify the destination directory for uploaded files
     cb(null, "src/uploads/")
   },
