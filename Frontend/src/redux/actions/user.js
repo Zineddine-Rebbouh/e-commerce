@@ -8,10 +8,7 @@ export const LoadUser = () => async dispatch => {
       method: "GET",
       credentials: "include",
     })
-
-    console.log(res)
     const data = await res.json()
-    console.log(data)
     dispatch({
       type: "LoadUserSuccess",
       payload: data.user,

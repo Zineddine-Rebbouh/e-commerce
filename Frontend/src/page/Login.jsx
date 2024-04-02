@@ -33,7 +33,7 @@ const Login = () => {
             console.log( "error" );
             toast.error( error.message, {
                 position: "top-center",
-                autoClose: 5000,
+                autoClose: 2200,
 
             } );
         }
@@ -41,7 +41,7 @@ const Login = () => {
             console.log( 'Login success' );
             toast.success( 'Login success', {
                 position: "top-center",
-                autoClose: 2000,
+                autoClose: 2200,
 
             } );
             setTimeout( () => {

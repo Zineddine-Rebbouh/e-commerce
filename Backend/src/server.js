@@ -11,6 +11,9 @@ const path = require("path")
 const cloudinary = require("cloudinary").v2
 
 const userRoutes = require("./routes/userRoutes")
+const categoriesRoutes = require("./routes/categoriesRoutes")
+const productsRoutes = require("./routes/productRoutes")
+const ShopRoutes = require("./routes/ShopRoutes")
 const ErrorHandler = require("./utils/ErrorHandler")
 
 app.use(
@@ -28,6 +31,14 @@ app.use(express.static(path.join(__dirname, "uploads")))
 
 app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
+app.use("/api/categories", categoriesRoutes)
+app.use("/api/products", productsRoutes)
+app.use("/api/shop", ShopRoutes)
+// app.use("/api/orders", require("./routes/ordersRoutes"))
+// app.use("/api/cart", require("./routes/cartRoutes"))
+// app.use("/api/addresses", require("./routes/addressesRoutes"))
+// app.use("/api/payment", require("./routes/paymentRoutes"))
+
 app.use(ErrorHandler)
 
 // Connect to MongoDB

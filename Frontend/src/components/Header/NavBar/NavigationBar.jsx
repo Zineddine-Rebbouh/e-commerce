@@ -9,56 +9,54 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import styles from '../../../utils/styles'
 import { navItems } from '../../../constants/data'
+import { FaUserAlt } from "react-icons/fa";
+
 
 const NavigationBar = () => {
-    const [ active, setActive ] = useState( false )
     const { isAuthenticated, user } = useSelector( ( state ) => state.user );
-    console.log( isAuthenticated );
     return (
         <div className='
-        sticky top-0 w-full bg-slate-200 z-30 shadow-sm'>
+        sticky top-0 w-full bg-[#222] z-30 shadow-sm'>
             <div className='py-3 border-b-1 '>
                 <Container>
-                    <div className='flex items-center justify-between gap-3 md-g ap-0'>
-                        <a href="/" className='font-bold text-3xl'>E-commerce</a>
-                        <div className='hidden md:flex  '>
-                            {
-                                navItems && navItems.map( ( i, index ) => (
-                                    <div className="flex">
-                                        <Link to={ i.url }
-                                            className={ ` ${ active === index + 1 ? "text-[#17dd1f]" : "text-black  800px:text-[#fff]" } 800px:pb-0 font-[600] px-6 cursor-pointer }` }
-                                        >
-                                            { i.title }
-                                        </Link>
-                                    </div>
-                                ) )
-                            }
+                    <div className='flex items-center  gap-3 md-g ap-0'>
+                        <a href="/" className='text-white font-bold text-3xl'>.Logo</a>
+                        <div className='hidden md:flex flex-grow '>
+                            <SearchBar />
                         </div>
                         <div className='flex items-center gap-3 md:gap-6'>
                             { isAuthenticated ? (
                                 <div>
-                                    <Link
-                                        to="/create-seller"
-                                        className="text-[18px] text-white border-1 border-[#000000b7] px-4 py-2 rounded-md bg-black"
-                                    >
-                                        &raquo; Apply for Seller
-                                    </Link>
+                                    {
+                                        user.role === 'Seller' ? (
+                                            <Link
+                                                to={ `/shop/${ user.shopId }` }
+                                                className="text-[18px] text-white border-1 border-[#000000b7] px-4 py-2 rounded-md bg-black"
+                                            >
+                                                Shop
+                                            </Link>
+                                        ) : (
+                                            <Link
+                                                to="/create-shop"
+                                                className="text-[18px] text-white border-1 border-[#000000b7] px-4 py-2 rounded-md bg-black"
+                                            >
+                                                &raquo; Create Your Shop
+                                            </Link>
+                                        )
+                                    }
                                 </div>
                             ) : (
-                                <>
-                                    <Link
-                                        to="/sign-in"
-                                        className="text-[18px] text-[#000000b7] border-[#000000b7] px-4 py-2 rounded-md font-bold"
-                                    >
-                                        Sign in
-                                    </Link>
-                                    <Link
-                                        to="/sign-up"
-                                        className="text-[18px] text-white border-1 border-[#000000b7] px-4 py-2 rounded-md bg-black"
-                                    >
-                                        Sign up
-                                    </Link>
-                                </>
+                                <div className='flex gap-4 items-center '>
+                                    <FaUserAlt size={ 24 } color='#ef4a23' />
+                                    <div>
+                                        <span className='font-semibold text-white text-md'>Account</span>
+                                        <div className='flex gap-2'>
+                                            <Link to="/sign-in" className='text-gray-400 text-sm hover:text-white'>Login</Link>
+                                            <span className='text-gray-400 text-sm'>or</span>
+                                            <Link to="/sign-up" className='text-gray-400 text-sm hover:text-white'>Register</Link>
+                                        </div>
+                                    </div>
+                                </div>
                             ) }
                         </div>
                     </div>

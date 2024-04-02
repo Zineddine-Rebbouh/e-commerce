@@ -30,3 +30,31 @@ export const Login = async formData => {
     throw new Error(responseBody.message)
   }
 }
+
+export const createShop = async formData => {
+  const response = await fetch("http://localhost:8000/api/shop/create", {
+    method: "POST",
+    credentials: "include",
+    body: formData, // Pass the FormData object directly
+  })
+
+  const responseBody = await response.json()
+  console.log(response)
+
+  if (!response.ok) {
+    throw new Error(responseBody.message)
+  }
+}
+
+export const getShop = async formData => {
+  const response = await fetch("http://localhost:8000/api/shop/", {
+    credentials: "include",
+  })
+
+  const responseBody = await response.json()
+  console.log(response)
+
+  if (!response.ok) {
+    throw new Error(responseBody.message)
+  }
+}

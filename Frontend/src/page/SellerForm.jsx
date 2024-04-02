@@ -1,40 +1,83 @@
 import { React, useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../utils/styles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { useMutation } from "react-query"
+import { ToastContainer, toast } from "react-toastify";
+import * as apiClient from "../api/api-Client";
 
 const SellerForm = () => {
 
     const [ avatar, setAvatar ] = useState();
-    const [ visible, setVisible ] = useState( false );
 
-
+    const navigate = useNavigate()
     const { user } = useSelector( ( state ) => state.user );
 
-    const { register, watch, handleSubmit, formState: { errors } } = useForm()
+    const { mutate } = useMutation( apiClient.createShop, {
+        onError: ( error ) => {
+            console.log( "error" );
+            toast.error( error.message, {
+                position: "top-center",
+                autoClose: 2200,
+
+            } );
+        }
+        , onSuccess: async () => {
+            console.log( 'Login success' );
+            toast.success( 'Shop successfully created', {
+                position: "top-center",
+                autoClose: 2200,
+
+            } );
+            setTimeout( () => {
+                navigate( "/" )
+            }, 2000 )
+
+        },
+    } )
+
+    const { register, handleSubmit, formState: { errors } } = useForm()
 
     const onSubmit = handleSubmit( ( data ) => {
-        console.log( data )
+        console.log( data );
+        const formData = new FormData();
+        formData.append( "name", data.name );
+        formData.append( "email", data.email );
+        formData.append( "phoneNumber", data.phoneNumber );
+        formData.append( "description", data.description );
+        formData.append( "address", data.address );
+        formData.append( "zipCode", data.zipcode );
+        formData.append( "avatar", avatar );
+        formData.append( "userId", user._id );
+
+
+        mutate( formData );
     } )
 
     const handleFileInputChange = ( e ) => {
+
+        const file = e.target.files[ 0 ];
         const reader = new FileReader();
 
         reader.onload = () => {
             if ( reader.readyState === 2 )
             {
-                setAvatar( reader.result );
+                setAvatar( e.target.files[ 0 ] );
             }
         };
 
-        reader.readAsDataURL( e.target.files[ 0 ] );
+        reader.readAsDataURL( file );
     };
+
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            <ToastContainer
+                position="top-center"
+                autoClose={ 2200 }
+            />
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                     Register as a seller
@@ -106,6 +149,28 @@ const SellerForm = () => {
                                 htmlFor="email"
                                 className="block text-sm font-medium text-gray-700"
                             >
+                                Description
+                            </label>
+                            <div className="mt-1">
+                                <textarea
+                                    rows={ 3 }
+                                    cols={ 3 }
+                                    type="description"
+                                    name="description"
+                                    { ...register( "description", { required: "This field is required" } ) }
+                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                />
+                                {
+                                    errors.description && <span className="text-red-400"> { errors.description.message }</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="email"
+                                className="block text-sm font-medium text-gray-700"
+                            >
                                 Address
                             </label>
                             <div className="mt-1">
@@ -143,35 +208,11 @@ const SellerForm = () => {
 
                         <div>
                             <label
-                                htmlFor="password"
+                                htmlFor="avatar"
                                 className="block text-sm font-medium text-gray-700"
                             >
-                                Password
+                                Avatar
                             </label>
-                            <div className="mt-1 relative">
-                                <input
-                                    type={ visible ? "text" : "password" }
-                                    name="password"
-                                    { ...register( "password", { required: "This field is required" } ) }
-                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                />
-                                {
-                                    errors.password && <span className="text-red-400"> { errors.password.message }</span>
-                                }
-                                { visible ? (
-                                    <AiOutlineEye
-                                        className="absolute right-2 top-2 cursor-pointer"
-                                        size={ 25 }
-                                        onClick={ () => setVisible( false ) }
-                                    />
-                                ) : (
-                                    <AiOutlineEyeInvisible
-                                        className="absolute right-2 top-2 cursor-pointer"
-                                        size={ 25 }
-                                        onClick={ () => setVisible( true ) }
-                                    />
-                                ) }
-                            </div>
                         </div>
 
                         <div>
@@ -200,12 +241,13 @@ const SellerForm = () => {
                                         type="file"
                                         name="avatar"
                                         id="file-input"
-                                        onChange={ handleFileInputChange }
+                                        accept=".jpg,.jpeg,.png"
                                         { ...register( "avatar" ) }
+                                        onChange={ handleFileInputChange }
                                         className="sr-only"
                                     />
                                     {
-                                        errors.email && <span className="text-red-400"> { errors.email.message }</span>
+                                        errors.avatar && <span className="text-red-400"> { errors.avatar.message }</span>
                                     }
                                 </label>
                             </div>

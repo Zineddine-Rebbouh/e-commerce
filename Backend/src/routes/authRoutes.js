@@ -2,23 +2,8 @@ const express = require("express")
 const router = express.Router()
 const { register, login, logout } = require("../controllers/authController")
 const { check, body } = require("express-validator")
-const multer = require("multer")
 const { validateToken } = require("../middelware/validateToken")
-const path = require("path")
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    s
-    // Specify the destination directory for uploaded files
-    cb(null, "src/uploads/")
-  },
-  filename: function (req, file, cb) {
-    // Generate a unique filename for uploaded files
-    cb(null, Date.now() + "-" + file.originalname)
-  },
-})
-
-const upload = multer({ storage: storage })
+const upload = require("../utils/multer")
 
 router.post(
   "/register",

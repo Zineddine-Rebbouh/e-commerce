@@ -6,11 +6,15 @@ import SignUp from "./page/SignUp";
 import { useEffect } from "react";
 import Store from "./redux/store";
 import { LoadUser } from "./redux/actions/user";
-import BestSelling from "./components/Home/BestSelling";
 import Products from "./components/Home/Products";
 import Events from "./components/Home/Events";
 import FAQ from "./components/Home/FAQ";
 import SellerForm from "./page/SellerForm";
+import ProductDetails from "./components/Product/ProductDetails/ProductDetails";
+import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
+import ProfileCustomer from "./components/Customer/ProfileCustomer";
+import Whishlist from "./components/whishlist/Whishlist";
+import ShopProfile from "./components/Shop/ShopProfile";
 
 function App () {
 
@@ -43,17 +47,9 @@ function App () {
           }
         />
         <Route
-          path="/create-seller"
+          path="/create-shop"
           element={
             <SellerForm />
-          }
-        />
-        <Route
-          path="/best-selling"
-          element={
-            <Layout>
-              <BestSelling />
-            </Layout>
           }
         />
         <Route
@@ -78,6 +74,44 @@ function App () {
             <Layout>
               <FAQ />
             </Layout>
+          }
+        />
+        <Route
+          path="/product-details"
+          element={
+            <Layout>
+              <ProductDetails />
+            </Layout>
+          }
+        />
+        <Route
+          path="/add-to-cart"
+          element={
+            <Layout>
+              <ShoppingCart />
+            </Layout>
+          }
+        />
+        <Route
+          path="/whishlist"
+          element={
+            <Layout>
+              <Whishlist />
+            </Layout>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <Layout>
+              <ProfileCustomer />
+            </Layout>
+          }
+        />
+        <Route
+          path="/shop/:id"
+          element={
+            <ShopProfile />
           }
         />
       </Routes>

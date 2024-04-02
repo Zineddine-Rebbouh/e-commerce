@@ -15,7 +15,7 @@ const FAQ = () => {
     };
 
     return (
-        <div className={ `my-8` }>
+        <div className={ `p-8` }>
             <Container className="">
                 <h2 className="text-3xl font-bold text-gray-900 mb-8">FAQ</h2>
                 <div className="mx-auto space-y-4">

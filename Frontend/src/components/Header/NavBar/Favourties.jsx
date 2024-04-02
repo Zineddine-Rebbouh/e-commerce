@@ -1,7 +1,10 @@
 import React from 'react'
 import { CiHeart } from "react-icons/ci";
+import { useSelector } from 'react-redux';
 
 const Favourites = () => {
+    const { wishlist } = useSelector( ( state ) => state.wishlist )
+    const FavouritesCounter = wishlist.length
     return (
         <div
             className='relative cursor-pointer'
@@ -11,10 +14,9 @@ const Favourites = () => {
             <div className='text-3xl'>
                 <CiHeart size={ 32 } />
             </div>
-            <span className='absolute
-            top-[-10px] right-[-10px] bg-[#222] text-white h-6 w-6 rounded-full flex items-center justify-center text-sm
-            '>
-                7
+            <span className={ `${ FavouritesCounter === 0 ? "" : "bg-[#222]" }  absolute
+                top-[-10px] right-[-10px] text-white h-6 w-6 rounded-full flex items-center justify-center text-sm ` }>
+                { FavouritesCounter === 0 ? '' : FavouritesCounter }
             </span>
 
         </div>
