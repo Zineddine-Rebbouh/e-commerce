@@ -1,5 +1,5 @@
-import Home from "./components/Home/Home"
-import Layout from "./layout/Layout"
+import Home from "./components/Home/Home";
+import Layout from "./layout/Layout";
 import { Routes, Route } from "react-router-dom";
 import Login from "./page/Login";
 import SignUp from "./page/SignUp";
@@ -15,13 +15,13 @@ import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
 import ProfileCustomer from "./components/Customer/ProfileCustomer";
 import Whishlist from "./components/whishlist/Whishlist";
 import ShopProfile from "./components/Shop/ShopProfile";
+import { Success } from "./components/stripe/Success";
+import { Cancel } from "./components/stripe/Cancel";
 
-function App () {
-
-  useEffect(
-    () => {
-      Store.dispatch( LoadUser() )
-    }, [] )
+function App() {
+  useEffect(() => {
+    Store.dispatch(LoadUser());
+  }, []);
 
   return (
     <div>
@@ -34,24 +34,9 @@ function App () {
             </Layout>
           }
         />
-        <Route
-          path="/sign-up"
-          element={
-            <SignUp />
-          }
-        />
-        <Route
-          path="/sign-in"
-          element={
-            <Login />
-          }
-        />
-        <Route
-          path="/create-shop"
-          element={
-            <SellerForm />
-          }
-        />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-in" element={<Login />} />
+        <Route path="/create-shop" element={<SellerForm />} />
         <Route
           path="/products"
           element={
@@ -108,15 +93,12 @@ function App () {
             </Layout>
           }
         />
-        <Route
-          path="/shop/:id"
-          element={
-            <ShopProfile />
-          }
-        />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
+        <Route path="/shop/:id" element={<ShopProfile />} />
       </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

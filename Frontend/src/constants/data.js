@@ -15,7 +15,7 @@ export const navItems = [
     title: "FAQ",
     url: "/faq",
   },
-]
+];
 
 // branding data
 // export const brandingData = [
@@ -253,16 +253,16 @@ export const categoriesData = [
     image_Url:
       "https://searchspring.com/wp-content/uploads/2022/10/Hero-Image-Platform-Others-2.png",
   },
-]
+];
 
 // product Data
 export const productData = [
   {
-    id: 1,
+    id: "660b33a59cc01fa8dd32a28b",
     category: "Computers and Laptops",
     name: "MacBook pro M2 chipset 256gb ssd 8gb ram space-gray color with apple 1 year warranty",
     description:
-      "Product details are a crucial part of any eCommerce website or online marketplace. These details help the potential customers to make an informed decision about the product they are interested in buying. A well-written product description can also be a powerful marketing tool that can help to increase sales.Product details typically include information about the product's features, specifications, dimensions, weight, materials, and other relevant information that can help customers to understand the product better. The product details section should also include high-quality images and videos of the product, as well as customer reviews and ratings.",
+      "Product details are a crucial part of any eCommerce website or online marketplace. These details help the potential customers to make",
     image_Url: [
       {
         public_id: "test",
@@ -616,11 +616,11 @@ export const productData = [
     stock: 10,
   },
   {
-    id: 12,
+    id: "660b33a59cc01fa8dd32a28b",
     category: "Computers and Laptop",
     name: "MacBook pro M2 chipset 256gb ssd 8gb ram space gray color with apple 1 year warranty",
     description:
-      "Product details are a crucial part of any eCommerce website or online marketplace. These details help the potential customers to make an informed decision about the product they are interested in buying. A well-written product description can also be a powerful marketing tool that can help to increase sales.Product details typically include information about the product's features, specifications, dimensions, weight, materials, and other relevant information that can help customers to understand the product better. The product details section should also include high-quality images and videos of the product, as well as customer reviews and ratings.",
+      "Product details are a crucial part of any eCommerce website or online marketplace. These details help the potential customers to make",
     image_Url: [
       {
         public_id: "test",
@@ -646,7 +646,7 @@ export const productData = [
     stock: 10,
     category: "Computers & Laptop",
   },
-]
+];
 
 //I am changing the image links from firebase to amazon, firebase has issues with these direct links. Please remember to add the amazon link(that will show up at the error) instead of firebase at the cofig for it to work out.
 
@@ -830,7 +830,7 @@ export const products = [
     ],
     reviews: [],
   },
-]
+];
 
 export const footerProductLinks = [
   {
@@ -850,7 +850,7 @@ export const footerProductLinks = [
   {
     name: "Reviews",
   },
-]
+];
 
 export const footercompanyLinks = [
   {
@@ -868,7 +868,7 @@ export const footercompanyLinks = [
   {
     name: "Events",
   },
-]
+];
 
 export const footerSupportLinks = [
   {
@@ -886,4 +886,4 @@ export const footerSupportLinks = [
   {
     name: "Live chat",
   },
-]
+];
