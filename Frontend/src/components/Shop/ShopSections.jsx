@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { getShopDetails } from "../../redux/actions/shop";
 import { Loader } from "../Loader/Loader";
 
-const ShopSections = () => {
+const ShopSections = ({ active }) => {
   const { user } = useSelector((state) => state.user);
   const { shop, isLoading } = useSelector((state) => state.shop);
   const [name, setName] = useState(shop && shop.name);
@@ -55,6 +55,46 @@ const ShopSections = () => {
 
   if (isLoading) {
     return <Loader />;
+  }
+
+  if (active == 2) {
+    return (
+      <div className="w-full h-full border border-gray-100">
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <h1 className="text-3xl font-bold">Products</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (active == 3) {
+    return (
+      <div className="w-full h-full border border-gray-100">
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <h1 className="text-3xl font-bold">Events</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (active == 4) {
+    return (
+      <div className="w-full h-full border border-gray-100">
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <h1 className="text-3xl font-bold">Orders</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (active == 5) {
+    return (
+      <div className="w-full h-full border border-gray-100">
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <h1 className="text-3xl font-bold">Refunds</h1>
+        </div>
+      </div>
+    );
   }
 
   return (

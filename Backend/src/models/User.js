@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    phoneNumber: {
+      type: String,
+      required: false,
+    },
     shopId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shop",

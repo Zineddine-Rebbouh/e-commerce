@@ -9,8 +9,9 @@ router.post(
   "/register",
   upload.single("avatar"),
   [
-    body("name").notEmpty().withMessage("Full Name is required"),
+    body("name").notEmpty().withMessage("Full Name "),
     body("email").isEmail().withMessage("Invalid email format"),
+    body("phoneNumber").notEmpty().withMessage("Phone number is required"),
     body("password")
       .isLength({ min: 6 })
       .withMessage("Password must be at least 6 characters long"),

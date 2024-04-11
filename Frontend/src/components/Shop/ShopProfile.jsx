@@ -5,6 +5,7 @@ import ShopSections from "./ShopSections";
 import { useSelector, useDispatch } from "react-redux";
 import { getShopDetails } from "../../redux/actions/shop";
 import { Loader } from "../Loader/Loader";
+import { getAllOrdersOfUser } from "../../redux/actions/order";
 
 const ShopProfile = () => {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const ShopProfile = () => {
         </div>
         {/* ProfileSections will take the rest */}
         <div className="col-span-5 h-full">
-          <ShopSections />
+          <ShopSections active={active} />
         </div>
       </div>
     </div>

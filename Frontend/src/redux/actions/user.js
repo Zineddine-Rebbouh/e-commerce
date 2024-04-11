@@ -4,7 +4,7 @@ export const LoadUser = () => async dispatch => {
       type: "LoadUserRequest",
     })
 
-    const res = await fetch("http://localhost:8000/api/user/", {
+    const res = await fetch("http://localhost:8000/api/user/currentUser", {
       method: "GET",
       credentials: "include",
     })

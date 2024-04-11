@@ -15,7 +15,7 @@ export const navItems = [
     title: "FAQ",
     url: "/faq",
   },
-];
+]
 
 // branding data
 // export const brandingData = [
@@ -253,7 +253,7 @@ export const categoriesData = [
     image_Url:
       "https://searchspring.com/wp-content/uploads/2022/10/Hero-Image-Platform-Others-2.png",
   },
-];
+]
 
 // product Data
 export const productData = [
@@ -646,7 +646,7 @@ export const productData = [
     stock: 10,
     category: "Computers & Laptop",
   },
-];
+]
 
 //I am changing the image links from firebase to amazon, firebase has issues with these direct links. Please remember to add the amazon link(that will show up at the error) instead of firebase at the cofig for it to work out.
 
@@ -830,7 +830,7 @@ export const products = [
     ],
     reviews: [],
   },
-];
+]
 
 export const footerProductLinks = [
   {
@@ -850,7 +850,7 @@ export const footerProductLinks = [
   {
     name: "Reviews",
   },
-];
+]
 
 export const footercompanyLinks = [
   {
@@ -868,7 +868,7 @@ export const footercompanyLinks = [
   {
     name: "Events",
   },
-];
+]
 
 export const footerSupportLinks = [
   {
@@ -886,4 +886,4 @@ export const footerSupportLinks = [
   {
     name: "Live chat",
   },
-];
+]

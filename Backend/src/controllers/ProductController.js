@@ -32,7 +32,7 @@ const AddProduct = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const products = await Product.find({})
-    return res.status(200).json(products)
+    return res.status(200).json({ products })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

@@ -35,6 +35,13 @@ const NavigationBar = () => {
                                             >
                                                 Shop
                                             </Link>
+                                        ) : user.role === 'Admin' ? (
+                                            <Link
+                                                to="/dashboard"
+                                                className="text-[18px] text-white border-1 border-[#000000b7] px-4 py-2 rounded-md bg-black"
+                                            >
+                                                Admin Dashboard
+                                            </Link>
                                         ) : (
                                             <Link
                                                 to="/create-shop"

@@ -7,6 +7,7 @@ import SetColor from './SetColor'
 import AddToCartButton from '../../Buttons/AddToCartButton'
 import ProductImage from './ProductImage'
 import ListRating from './ListRating'
+import AddRating from '../../Rating/AddRating'
 
 const ProductDetails = ( { } ) => {
     const product = products[ 2 ]
@@ -94,7 +95,7 @@ const ProductDetails = ( { } ) => {
                     </div>
                 </div>
                 <div className='flex flex-col mt-20 gap-4'>
-                    <div className=''>Add Rating</div>
+                    <AddRating />
                     <ListRating product={ product } />
                 </div>
             </Container>

@@ -49,18 +49,18 @@ const ProductCard = ( { data, key } ) => {
         <>
             <div key={ key } className="w-full h-[380px] bg-white rounded-lg shadow-xl p-3 relative cursor-pointer">
                 <div className="flex justify-end"></div>
-                <Link to={ '/product-details' }>
+                <Link to={ '/product-details/' + data.id }>
                     <img
                         src={ `${ data.image_Url && data.image_Url[ 0 ]?.url }` }
                         alt=""
                         className="w-full h-[170px] object-contain mb-2"
                     />
                 </Link>
-                <Link to={ '/product-details' } className="flex items-center gap-2">
+                <Link to={ '/product-details/' + data.id } className="flex items-center gap-2">
                     <Avatar widthImage={ 20 } heightImage={ 20 } src={ data.shop.shop_avatar.url } />
                     <h5 className={ `${ styles.shop_name }` }>{ data.shop.name }</h5>
                 </Link>
-                <Link to={ '/product-details' }>
+                <Link to={ '/product-details/' + data.id }>
                     <h4 className="pb-3 font-[500]">
                         { data.name.length > 40 ? data.name.slice( 0, 40 ) + "..." : data.name }
                     </h4>

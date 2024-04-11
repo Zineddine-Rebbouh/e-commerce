@@ -43,6 +43,14 @@ const productSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    isHavingDiscount: {
+      type: Boolean,
+      default: false,
+    },
+    discount: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Discount",
+    },
     Reviews: [
       {
         type: mongoose.Schema.Types.ObjectId,

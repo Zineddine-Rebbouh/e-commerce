@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const orderSchema = new mongoose.Schema(
   {
@@ -37,11 +37,6 @@ const orderSchema = new mongoose.Schema(
       update_time: { type: String },
       email_address: { type: String },
     },
-    taxPrice: {
-      type: Number,
-      required: true,
-      default: 0.0,
-    },
     shippingPrice: {
       type: Number,
       required: true,
@@ -72,7 +67,7 @@ const orderSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-);
+)
 
-const Order = mongoose.model("Order", orderSchema);
-module.exports = Order;
+const Order = mongoose.model("Order", orderSchema)
+module.exports = Order
