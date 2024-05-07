@@ -14,28 +14,43 @@ import ProductDetails from "./components/Product/ProductDetails/ProductDetails";
 import ShoppingCart from "./components/ShoppingCart/ShoppingCart";
 import ProfileCustomer from "./components/Customer/ProfileCustomer";
 import Whishlist from "./components/whishlist/Whishlist";
-import ShopProfile from "./components/Shop/ShopProfile";
+import Shop from "./components/Shop/Shop";
+import ShopProfile from "./components/Shop/sections/ShopProfile"
 import { Success } from "./components/stripe/Success";
 import { Cancel } from "./components/stripe/Cancel";
 import Admin from "./page/Dashboard/AdminDashboard/Admin";
 import Dashboard from "./sections/Dashboard";
 import User from "./sections/User";
 import Revenue from "./sections/Revenue";
-import Transactions from "./components/Transactions/Transactions";
+import Transactions from "./sections/Transactions";
 import Reports from "./sections/Reports";
 import Shops from "./sections/Shops";
 import Settings from "./sections/Settings";
 import Help from "./sections/Help";
 import SingleUserPage from "./sections/SingleUserPage";
 import ProductsPage from "./sections/ProductsPage";
+import ProtectRoute from "./utils/ProtectRoute";
+import NotFound from "./page/NotFound";
+import OrderDetails from "./components/Customer/sections/OrderDetails";
+import { getAllProducts } from "./redux/actions/product";
+import Orders from "./components/Shop/sections/Orders"
+import CustomerProfile from "./components/Customer/sections/CustomerProfile";
+import UserShopProfile from "./components/ShopProfile/UserShopProfile";
+import SellerDashboard from "./components/Shop/sections/SellerDashboard";
+import ShopProducts from './components/Shop/sections/Products'
+import CusomterOrders from './components/Customer/sections/Orders'
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 function App () {
   useEffect( () => {
-    Store.dispatch( LoadUser() );
+    Store.dispatch( LoadUser() )
+    Store.dispatch( getAllProducts() )
   }, [] );
 
   return (
     <div>
+      <ToastContainer position="top-center" autoClose={ 5000 } />
       <Routes>
         <Route
           path="/"
@@ -96,17 +111,11 @@ function App () {
             </Layout>
           }
         />
-        <Route
-          path="/profile"
-          element={
-            <Layout>
-              <ProfileCustomer />
-            </Layout>
-          }
-        />
+
         <Route path="/success" element={ <Success /> } />
         <Route path="/cancel" element={ <Cancel /> } />
-        <Route path="/shop/:id" element={ <ShopProfile /> } />
+
+
 
 
         // Admin Dashboard
@@ -120,7 +129,154 @@ function App () {
         <Route path="/dashboard/shops" element={ <Admin><Shops /></Admin> } />
         <Route path="/dashboard/settings" element={ <Admin><Settings /></Admin> } />
         <Route path="/dashboard/help" element={ <Admin><Help /></Admin> } />
+        <Route path="*" element={ <Layout><NotFound /></Layout> } />
 
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectRoute>
+              <Layout>
+                <ProfileCustomer>
+                  <div className="flex justify-center items-center h-full p-4 w-full shadow-md">
+                    <CustomerProfile />
+                  </div>
+                </ProfileCustomer>
+              </Layout>
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/profile/orders"
+          element={
+            <ProtectRoute>
+              <Layout>
+                <ProfileCustomer>
+                  <div className="flex justify-center items-center h-full p-4 w-full shadow-md">
+                    <CusomterOrders />
+                  </div>
+                </ProfileCustomer>
+              </Layout>
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/profile/refunds"
+          element={
+            <ProtectRoute>
+              <Layout>
+                <ProfileCustomer>
+                  <div>Refunds</div>
+                </ProfileCustomer>
+              </Layout>
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/profile/track-order"
+          element={
+            <ProtectRoute>
+              <Layout>
+                <ProfileCustomer>
+                  <div>Refunds</div>
+                </ProfileCustomer>
+              </Layout>
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/profile/messages"
+          element={
+            <ProtectRoute>
+              <Layout>
+                <ProfileCustomer>
+                  <div>Refunds</div>
+                </ProfileCustomer>
+              </Layout>
+            </ProtectRoute>
+          }
+        />
+
+        <Route path="/profile/order/:id" element={ <OrderDetails /> } />
+
+
+
+        <Route
+          path="/shop"
+          element={
+            <ProtectRoute>
+
+              <Shop>
+                <SellerDashboard />
+              </Shop>
+
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/shop/profile"
+          element={
+            <ProtectRoute>
+
+              <Shop>
+                <ShopProfile />
+              </Shop>
+
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/shop/orders"
+          element={
+            <ProtectRoute>
+
+              <Shop>
+                <div className="flex justify-center items-center h-full p-4 w-full shadow-md">
+                  <Orders />
+                </div>
+              </Shop>
+
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/shop/products"
+          element={
+            <ProtectRoute>
+
+              <Shop>
+                <ShopProducts />
+              </Shop>
+
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/shop/refunds"
+          element={
+            <ProtectRoute>
+
+              <Shop>
+                <div>Refunds</div>
+              </Shop>
+
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/shop/events"
+          element={
+            <ProtectRoute>
+
+              <Shop>
+                <div>Events</div>
+              </Shop>
+
+            </ProtectRoute>
+          }
+        />
+
+        <Route path="/shop/:id" element={ <Layout> <UserShopProfile /></Layout> } />
 
       </Routes>
     </div>

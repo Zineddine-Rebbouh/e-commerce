@@ -11,12 +11,12 @@ const ListRating = ( { product } ) => {
             </div>
             <div className='text-sm mt-4'>
                 {
-                    product.reviews && product.reviews.map( ( review, index ) => (
+                    product.Reviews && product.Reviews.map( ( review, index ) => (
                         <div key={ index } className='max-w-300px'>
                             <div className='flex items-center gap-2'>
-                                <Avatar src={ review.user.image } />
-                                <h1 className='flex font-semibold'>{ review?.user.name }</h1>
-                                <div className='font-light ml-2'>{ moment( review?.createDate ).fromNow() }</div>
+                                <Avatar src={ review.userId.avatar } />
+                                <h1 className='flex font-semibold'>{ review?.userId.name }</h1>
+                                <div className='font-light ml-2'>{ moment( review?.createdAt ).fromNow() }</div>
                             </div>
                             <div className='mt-2'>
                                 <Rating value={ review?.rating } readOnly />

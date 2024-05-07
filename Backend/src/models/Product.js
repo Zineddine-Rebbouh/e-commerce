@@ -12,22 +12,23 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     shopId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Shop",
       required: true,
     },
-    tags: {
-      type: [String],
-      required: true,
-    },
+    // tags: {
+    //   type: [String],
+    //   required: true,
+    // },
     image: {
       url: {
         type: String,
         required: true,
       },
-      color: {
-        type: String,
-        required: true,
-      },
+      // color: {
+      //   type: String,
+      //   required: true,
+      // },
     },
     description: {
       type: String,
@@ -47,16 +48,18 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    discount: {
+    rating: {
+      type: Number,
+      default: 3,
+    },
+    total_sell: {
+      type: Number,
+      default: 0,
+    },
+    discountId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Discount",
     },
-    Reviews: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Review",
-      },
-    ],
   },
   {
     timestamps: true,

@@ -14,7 +14,9 @@ const User = () => {
             try
             {
                 const response = await apiClient.getUsers();
-                setUsers( response.users );
+
+                const data = response.users.map( ( user ) => { return { ...user, createdAt: new Date( user.createdAt ).toLocaleDateString() } } );
+                setUsers( data );
             } catch ( error )
             {
                 console.error( error );

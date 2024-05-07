@@ -1,22 +1,24 @@
-import { categoriesData } from "../../constants/data";
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-const CategoriesFilter = ( { selectedCategory, onChange } ) => {
+const CategoriesFilter = ( { selectedCategory, onChange, categories } ) => {
     return (
         <div className="border-b border-slate-300 pb-5">
-            <h4 className="text-md font-semibold mb-2">Category Type</h4>
-            { categoriesData.map( ( category, index ) => (
-                <label className="flex items-center space-x-2" key={ index }>
-                    <input
-                        type="radio"
-                        className="rounded"
-                        name="category"
-                        value={ category.title }
-                        checked={ selectedCategory === category.title }
-                        onChange={ () => onChange( category.title ) }
-                    />
-                    <span>{ category.title }</span>
-                </label>
-            ) ) }
+            <FormControl variant="outlined" className="w-full">
+                <InputLabel id="category-select-label">Category Type</InputLabel>
+                <Select
+                    labelId="category-select-label"
+                    id="category-select"
+                    value={ selectedCategory }
+                    onChange={ ( e ) => onChange( e.target.value ) }
+                    label="Category Type"
+                >
+                    { categories?.map( ( category, index ) => (
+                        <MenuItem key={ index } value={ category.name }>
+                            { category.name }
+                        </MenuItem>
+                    ) ) }
+                </Select>
+            </FormControl>
         </div>
     );
 };

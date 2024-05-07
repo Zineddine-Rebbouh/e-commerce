@@ -6,14 +6,6 @@ const discountSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    shopId: {
-      type: String,
-      required: true,
-    },
-    productId: {
-      type: String,
-      required: true,
-    },
     start_date: {
       type: String,
       required: true,

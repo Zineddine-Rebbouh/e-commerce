@@ -1,6 +1,6 @@
 import React from 'react'
 import Card from '../components/Card/card'
-import Transactions from '../components/Transactions/Transactions'
+import Transactions from './Transactions'
 import Chart from '../components/Chart/chart'
 import Rightbar from '../components/Rightbar/Rightbar'
 

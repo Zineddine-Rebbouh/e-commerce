@@ -6,6 +6,10 @@ const SetQuantity = ( {
     IncreaseQuantity,
     DecreaseQuantity,
 } ) => {
+
+    console.log( cartProduct );
+
+
     return (
         <div className='flex gap-8 items-center '>
             {

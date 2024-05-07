@@ -14,6 +14,7 @@ import { FaUserAlt } from "react-icons/fa";
 
 const NavigationBar = () => {
     const { isAuthenticated, user } = useSelector( ( state ) => state.user );
+
     return (
         <div className='
         sticky top-0 w-full bg-[#222] z-30 shadow-sm'>
@@ -28,14 +29,14 @@ const NavigationBar = () => {
                             { isAuthenticated ? (
                                 <div>
                                     {
-                                        user.role === 'Seller' ? (
+                                        user?.role === 'Seller' ? (
                                             <Link
-                                                to={ `/shop/${ user.shopId }` }
+                                                to={ `/shop` }
                                                 className="text-[18px] text-white border-1 border-[#000000b7] px-4 py-2 rounded-md bg-black"
                                             >
                                                 Shop
                                             </Link>
-                                        ) : user.role === 'Admin' ? (
+                                        ) : user?.role === 'Admin' ? (
                                             <Link
                                                 to="/dashboard"
                                                 className="text-[18px] text-white border-1 border-[#000000b7] px-4 py-2 rounded-md bg-black"

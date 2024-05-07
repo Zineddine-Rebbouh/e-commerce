@@ -1,99 +1,92 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "../../layout/Container";
-import { products } from "../../constants/data";
-import SetQuantity from "../Product/ProductDetails/SetQuantity";
-import SetColor from "../Product/ProductDetails/SetColor";
 import { Divider } from "@mui/material";
 import Button from "../Buttons/AddToCartButton";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "../../redux/actions/cart";
+import { removeFromCart, updateCart } from "../../redux/actions/cart";
 import * as apiClient from "../../api/api-Client";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 const ShoppingCart = () => {
-  const { cart } = useSelector((state) => state.cart);
-  const { user } = useSelector((state) => state.user);
+  const { cart } = useSelector( ( state ) => state.cart );
+  const { user } = useSelector( ( state ) => state.user );
+  const [ cartItems, setCartItems ] = useState( cart );
   const dispatch = useDispatch();
   const cartCounter = cart.length;
+  const navigate = useNavigate()
 
-  const product = products[2];
-  const [CartProduct, setCartProduct] = useState({
-    id: product.id,
-    name: product.name,
-    price: product.price,
-    SelectedImage: { ...product.images[0] },
-    quantity: 1,
-    category: product.category,
-  });
+  useEffect( () => {
+    // Initialize the quantity of each product to 1 by default
+    // const initializedCartItems = cart.map((product) => ({
+    //   ...product,
+    //   quantity: 1,
+    // }));
+    setCartItems( cart );
+  }, [ cart ] );
 
-  const handleColorSelection = useCallback((i) => {
-    setCartProduct((prev) => {
-      return { ...prev, SelectedImage: i };
-    });
-  });
+  console.log( cart );
 
-  const IncreaseQuantity = () => {
-    setCartProduct({
-      ...CartProduct,
-      quantity: CartProduct.quantity + 1,
-    });
+  const removeProductFromCart = ( productId ) => {
+    console.log( productId );
+    dispatch( removeFromCart( productId ) );
   };
 
-  const DecreaseQuantity = () => {
-    if (CartProduct.quantity > 1) {
-      setCartProduct({
-        ...CartProduct,
-        quantity: CartProduct.quantity - 1,
-      });
-    }
-  };
+  const [ amount, setAmount ] = useState( 0 );
 
-  const handleCartQuantityProductIncrease = useCallback(
-    (product) => {
-      let updateCartProduct;
-      if (product.quantity === 99) {
-        return <Toast message="You can not add more than 99 products" />;
-      }
-      if (cart) {
-        updateCartProduct = [...cart];
-        const existingIndex = cart.findIndex((p) => p.id === product.id);
-
-        if (existingIndex > -1) {
-          updateCartProduct[existingIndex].quantity += 1;
-        }
-
-        setCartProduct(updateCartProduct);
-      }
-    },
-    [cart]
-  );
-
-  const removeProductFromCart = (product) => {
-    dispatch(removeFromCart(product));
-  };
-
-  const [amount, setAmount] = useState(0);
-
-  useEffect(() => {
+  useEffect( () => {
     let totalPrice = 0;
-    cart.map((product) => {
-      totalPrice += product.price;
-    });
-    setAmount(totalPrice);
-  }, [cart]);
+    cartItems.forEach( ( product ) => {
+      totalPrice += product.price * product.quantity;
+    } );
+    setAmount( totalPrice );
+  }, [ cartItems ] );
 
-  const { mutate } = useMutation(apiClient.checkout, {
-    onSuccess: (data) => {
-      console.log(data);
+  const { mutate } = useMutation( apiClient.checkout, {
+    onSuccess: ( data ) => {
+      console.log( data );
       window.location = data.url;
     },
-    onError: (error) => {
-      console.error("Checkout failed:", error);
+    onError: ( error ) => {
+      console.error( "Checkout failed:", error );
     },
-  });
+  } );
+
+  const handleIncreaseQuantity = ( productId ) => {
+    // Update the quantity in the local state
+    const updatedCartItems = cartItems.map( ( item ) =>
+      item._id === productId ? { ...item, quantity: item.quantity + 1 } : item
+    );
+    setCartItems( updatedCartItems );
+
+    // Dispatch the action with the updated cart items
+    dispatch( updateCart( updatedCartItems ) );
+  };
+
+  const handleDecreaseQuantity = ( productId ) => {
+    // Update the quantity in the local state
+    const updatedCartItems = cartItems.map( ( item ) =>
+      item._id === productId && item.quantity > 1
+        ? { ...item, quantity: item.quantity - 1 }
+        : item
+    );
+    setCartItems( updatedCartItems );
+
+    // Dispatch the action with the updated cart items
+    dispatch( updateCart( updatedCartItems ) );
+  };
+
 
   const handlecheckout = async () => {
-    mutate(cart, user);
+
+    if ( user )
+    {
+      mutate( cartItems, user );
+    } else
+    {
+      sessionStorage.setItem( "redirectUrl", window.location.pathname );
+      navigate( '/sign-in' )
+    }
   };
 
   return (
@@ -102,48 +95,53 @@ const ShoppingCart = () => {
         <div className=" flex gap-10 py-16 px-10 flex-col md:flex-row ">
           <div className="w-full md:w-2/3">
             <p className="font-bold text-2xl">
-              Shopping Cart ( {cartCounter} items)
+              Shopping Cart ( { cartCounter } items)
             </p>
             <hr className="my-6" />
-            {cart.length === 0 ? (
+            { cart.length === 0 ? (
               <p className="text-heading4">Your cart is empty</p>
             ) : (
               <div>
-                {cart.map((product) => (
+                { cart.map( ( product ) => (
                   <div
-                    key={product.id}
+                    key={ product.id }
                     className="w-full flex hover:bg-grey-1 px06 py-5 items-center justify-between"
                   >
                     <div className="flex items-center">
                       <img
-                        src={product.image_Url[0].url}
-                        alt={product.name}
-                        width={100}
-                        height={100}
+                        src={ product.image?.url }
+                        alt={ product.name }
+                        width={ 100 }
+                        height={ 100 }
                         className="rounded-lg w-32 h-32 object-contain"
                       />
                       <div className="flex flex-col gap-3 ml-4">
-                        <p className="text-body-bold">{product.name}</p>
+                        <p className="text-body-bold">{ product.name }</p>
                         <div className="flex flex-col justify-center gap-2">
-                          <div>
-                            <SetQuantity
-                              cartProduct={CartProduct}
-                              cartCounter={false}
-                              IncreaseQuantity={IncreaseQuantity}
-                              DecreaseQuantity={DecreaseQuantity}
-                            />
-                          </div>
-                          <div>
-                            <SetColor
-                              cartProduct={CartProduct}
-                              images={product.image_Url}
-                              handleColorSelection={handleColorSelection}
-                            />
+                          <div className="flex gap-8 items-center ">
+                            <div className="font-semibold text-slate-600">
+                              Quantity :
+                            </div>
+                            <div className="flex gap-4 items-center text-base">
+                              <button
+                                className="border border-slate-500 px-2 rounded flex items-center justify-center"
+                                onClick={ () => handleDecreaseQuantity( product._id ) }
+                              >
+                                -
+                              </button>
+                              <div>{ product.quantity }</div>
+                              <button
+                                className="border border-slate-500 px-2 rounded flex items-center justify-center"
+                                onClick={ () => handleIncreaseQuantity( product._id ) }
+                              >
+                                +
+                              </button>
+                            </div>
                           </div>
                           <div className="w-[70px]">
                             <button
                               className="text-slate-500 underline"
-                              onClick={() => removeProductFromCart(product)}
+                              onClick={ () => removeProductFromCart( product._id ) }
                             >
                               Remove
                             </button>
@@ -152,34 +150,34 @@ const ShoppingCart = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                ) ) }
               </div>
-            )}
+            ) }
           </div>
           <Divider orientation="vertical" flexItem />
           <div className="w-full md:w-1/3">
             <div>
               <p className="font-bold text-2xl">Order Summary</p>
               <hr className="my-6" />
-              {cart.map((product) => (
+              { cartItems.map( ( product ) => (
                 <div
-                  key={product.id}
-                  onChange={(product) => setAmount(amount + product.price)}
+                  key={ product.id }
+                  onChange={ ( product ) => setAmount( amount + product.price ) }
                 >
                   <div className="flex justify-between">
-                    <p className="text-body">* {product.name}</p>
-                    <p className="text-body">${product.price}</p>
+                    <p className="text-body">* { product.name }</p>
+                    <p className="text-body">${ product.price }</p>
                   </div>
                 </div>
-              ))}
+              ) ) }
               <hr className="my-6" />
               <div className="flex justify-between mb-4">
                 <p className="font-bold">Total</p>
-                <p className="font-bold">${amount}</p>
+                <p className="font-bold">${ amount }</p>
               </div>
               <Button
-                onClick={() => handlecheckout()}
-                label={"Proccde to checkout"}
+                onClick={ () => handlecheckout() }
+                label={ "Proccde to checkout" }
               />
             </div>
           </div>

@@ -14,12 +14,9 @@ const Wishlist = () => {
 
     const WhishlistCounter = wishlist.length
     const removeFromWishlistHandler = ( data ) => {
-        dispatch( removeFromWishlist( data ) );
+        console.log( data );
+        dispatch( removeFromWishlist( data._id ) );
     };
-
-    const addToCartHandler = ( data ) => {
-        dispatch( addTocart( data ) );
-    }
 
     return (
 
@@ -35,7 +32,7 @@ const Wishlist = () => {
                                 { wishlist.map( ( product, index ) => (
                                     <div key={ index } className='w-full flex hover:bg-grey-1 px06 py-5 items-center justify-between'>
                                         <div className='flex items-center'>
-                                            <img src={ product.image_Url[ 0 ].url } alt={ product.name } width={ 100 } height={ 100 } className='rounded-lg w-32 h-32 object-contain' />
+                                            <img src={ product.image.url } alt={ product.name } width={ 100 } height={ 100 } className='rounded-lg w-32 h-32 object-contain' />
                                             <div className='flex flex-col gap-3 ml-4'>
                                                 <p className='text-body-bold'>{ product.name }</p>
                                                 <div className='flex flex-col justify-center gap-2'>

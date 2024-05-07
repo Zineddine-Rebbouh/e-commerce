@@ -1,3 +1,4 @@
+const LineItems = require("../models/LineOrderItems")
 const Order = require("../models/Order")
 
 const getOrders = async (req, res) => {
@@ -9,22 +10,35 @@ const getOrders = async (req, res) => {
     res.status(200).json({ orders })
   } catch (error) {
     console.error(error.message)
-    return next(new ErrorHandler(error.message, 500))
+    return res.status(500).json({ message: error.message })
   }
 }
 
 const getOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
+      .populate("userId", "name email")
+      .populate("shippingAddress")
 
     if (!order) {
       return next(new ErrorHandler("Order not found", 404))
     }
 
-    res.status(200).json({ order })
+    const items = await LineItems.find({ orderId: order._id }).populate(
+      "productId"
+    )
+
+    const productInfos = items.map(item => ({
+      ...item.productId,
+      quantity: item.quantity,
+    }))
+
+    const orderWithProductInfos = { ...order.toObject(), items: productInfos }
+    console.log(orderWithProductInfos)
+    res.status(200).json(orderWithProductInfos)
   } catch (error) {
     console.error(error.message)
-    return next(new ErrorHandler(error.message, 500))
+    return res.status(500).json({ message: error.message })
   }
 }
 
@@ -42,7 +56,7 @@ const getOrderByUserId = async (req, res) => {
     res.status(200).json(orders)
   } catch (error) {
     console.error(error.message)
-    return next(new ErrorHandler(error.message, 500))
+    return res.status(500).json({ message: error.message })
   }
 }
 

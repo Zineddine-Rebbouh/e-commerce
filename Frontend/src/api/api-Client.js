@@ -47,6 +47,7 @@ export const createShop = async formData => {
 }
 
 export const getShop = async shopId => {
+  console.log(shopId)
   const response = await fetch("http://localhost:8000/api/shop/" + shopId, {
     credentials: "include",
   })
@@ -106,6 +107,25 @@ export const getProdutcts = async () => {
   if (!response.ok) {
     throw new Error("Failed to fetch users")
   }
+  ad
+  const responseBody = await response.json()
+  console.log(responseBody)
+
+  return responseBody
+}
+
+export const getProductByCategory = async (categoryId, productId) => {
+  const response = await fetch(
+    `http://localhost:8000/api/products/get-category-products/${categoryId}/${productId} `,
+    {
+      credentials: "include",
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch products")
+  }
+
   const responseBody = await response.json()
   console.log(responseBody)
 
@@ -122,12 +142,11 @@ export const checkout = async (cartItems, customer) => {
     },
     body: JSON.stringify({ cartItems, customer }),
   })
-
+  const responseBody = await response.json()
+  console.log(responseBody)
   if (!response.ok) {
     throw new Error(responseBody.message)
   }
-  const responseBody = await response.json()
-  console.log(responseBody)
 
   return responseBody
 }
@@ -163,9 +182,7 @@ export const logout = async () => {
 }
 
 export const getProducts = async () => {
-  const response = await fetch("http://localhost:8000/api/products", {
-    credentials: "include",
-  })
+  const response = await fetch("http://localhost:8000/api/products")
 
   if (!response.ok) {
     throw new Error("Failed to fetch products")
@@ -177,6 +194,7 @@ export const getProducts = async () => {
 }
 
 export const getProduct = async productId => {
+  console.log("here")
   const response = await fetch(
     "http://localhost:8000/api/products/" + productId,
     {
@@ -186,6 +204,23 @@ export const getProduct = async productId => {
 
   if (!response.ok) {
     throw new Error("Failed to fetch product")
+  }
+  const responseBody = await response.json()
+  console.log(responseBody)
+
+  return responseBody
+}
+
+export const getProdutctsByShopId = async shopId => {
+  const response = await fetch(
+    "http://localhost:8000/api/shop/products/" + shopId,
+    {
+      credentials: "include",
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch products")
   }
   const responseBody = await response.json()
   console.log(responseBody)
@@ -333,7 +368,7 @@ export const getShopProducts = async shopId => {
 
 export const getShopOrdersByShopId = async shopId => {
   const response = await fetch(
-    "http://localhost:8000/api/order/get-seller-all-orders/" + shopId,
+    "http://localhost:8000/api/shop/orders/" + shopId,
     {
       credentials: "include",
     }
@@ -390,8 +425,8 @@ export const createReview = async (productId, data) => {
   }
 }
 
-export const getReviews = async () => {
-  const response = await fetch("http://localhost:8000/api/review", {
+export const getReviews = async id => {
+  const response = await fetch("http://localhost:8000/api/review/" + id, {
     credentials: "include",
   })
 
@@ -569,6 +604,7 @@ export const createCartItem = async formData => {
     throw new Error("Failed to fetch orders")
   }
 }
+
 export const updateCartItem = async (cartItemId, formData) => {
   const response = await fetch(
     "http://localhost:8000/api/cartItem/" + cartItemId,
@@ -596,4 +632,124 @@ export const deleteCartItem = async cartItemId => {
   if (!response.ok) {
     throw new Error("Failed to fetch orders")
   }
+}
+
+export const addProdcut = async (formData, userId) => {
+  const response = await fetch("http://localhost:8000/api/products/add/", {
+    method: "POST",
+    credentials: "include",
+    body: formData, // Pass the FormData object directly
+  })
+
+  const responseBody = await response.json()
+  console.log(response)
+
+  if (!response.ok) {
+    throw new Error(responseBody.message)
+  }
+}
+
+export const getCateogries = async () => {
+  const response = await fetch("http://localhost:8000/api/categories", {
+    credentials: "include",
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch categories")
+  }
+  const responseBody = await response.json()
+  console.log(responseBody)
+
+  return responseBody
+}
+
+export const addRating = async data => {
+  const response = await fetch("http://localhost:8000/api/review/" + data.id, {
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify(data.dataToSend), // Pass the FormData object directly
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+
+  const responseBody = await response.json()
+  console.log(response)
+
+  if (!response.ok) {
+    throw new Error(responseBody.message)
+  }
+}
+
+const addWhislist = async (req, res) => {
+  try {
+    const { productId } = req.body
+
+    await Whislist.create({
+      userId: req.userId,
+      products: [{ productId }],
+    })
+
+    res.status(200).json("Product added to whislist")
+  } catch (error) {
+    console.error(error.message)
+    return next(new ErrorHandler(error.message, 500))
+  }
+}
+
+export const addToCart = async formData => {
+  const response = await fetch("http://localhost:8000/api/user/add-to-cart", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData), // Pass the FormData object directly
+  })
+
+  const responseBody = await response.json()
+  console.log(response)
+
+  if (!response.ok) {
+    throw new Error(responseBody.message)
+  }
+
+  return responseBody
+}
+
+export const removeFromCart = async formData => {
+  const response = await fetch(
+    "http://localhost:8000/api/user/remove-from-cart",
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData), // Pass the FormData object directly
+    }
+  )
+
+  const responseBody = await response.json()
+  console.log(response)
+
+  if (!response.ok) {
+    throw new Error(responseBody.message)
+  }
+
+  return responseBody
+}
+
+export const getCartItems = async () => {
+  const response = await fetch("http://localhost:8000/api/cartItem", {
+    credentials: "include",
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch cart items")
+  }
+  const responseBody = await response.json()
+  console.log(responseBody)
+
+  return responseBody
 }

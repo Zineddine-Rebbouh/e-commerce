@@ -6,10 +6,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAllOrdersOfUser } from "../../redux/actions/order";
 import { Loader } from "../Loader/Loader";
 
-const ProfileCustomer = () => {
+const ProfileCustomer = ( { children } ) => {
   const [ active, setActive ] = useState( 1 );
   const dispatch = useDispatch();
-  const { user, isLoading } = useSelector( ( state ) => state.user );
+  const { user, isLoading, isAuthenticated } = useSelector( ( state ) => state.user );
 
   useEffect( () => {
     if ( user && user._id )
@@ -17,6 +17,8 @@ const ProfileCustomer = () => {
       dispatch( getAllOrdersOfUser( user._id ) );
     }
   }, [ dispatch, user?._id ] );
+
+
 
   if ( isLoading )
   {
@@ -27,13 +29,11 @@ const ProfileCustomer = () => {
     <div className="p-8">
       <Container>
         <div className="grid grid-cols-6 space-x-2 min-h-[720px]">
-          {/* ProfileSideBar will take 1 fraction of space */ }
           <div className="col-span-1">
             <ProfileSideBar active={ active } setActive={ setActive } />
           </div>
-          {/* ProfileSections will take 3 fractions of space */ }
           <div className="col-span-5">
-            <ProfileSections active={ active } />
+            { children }
           </div>
         </div>
       </Container>

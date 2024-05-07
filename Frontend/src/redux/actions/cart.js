@@ -1,27 +1,36 @@
 // add to cart
-export const addTocart = (data) => async (dispatch, getState) => {
+export const addTocart = data => async (dispatch, getState) => {
   dispatch({
     type: "addToCart",
     payload: data,
-  });
+  })
 
-  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cart));
-  return data;
-};
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cart))
+  return data
+}
+
+export const updateCart = data => async (dispatch, getState) => {
+  dispatch({
+    type: "updateCart",
+    payload: data,
+  })
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cart))
+  return data
+}
 
 // remove from cart
-export const removeFromCart = (data) => async (dispatch, getState) => {
+export const removeFromCart = data => async (dispatch, getState) => {
   dispatch({
     type: "removeFromCart",
-    payload: data.id,
-  });
-  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cart));
-  return data;
-};
+    payload: data,
+  })
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cart))
+  return data
+}
 
 export const clearCart = () => async (dispatch, getState) => {
   dispatch({
     type: "clearCart",
-  });
-  localStorage.removeItem("cartItems");
-};
+  })
+  localStorage.removeItem("cartItems")
+}

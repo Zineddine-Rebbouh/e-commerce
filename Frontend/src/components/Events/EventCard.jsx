@@ -41,7 +41,7 @@ const EventCard = () => {
                     <h2 className='text-3xl text-blue '>2 days 3 hours 14 minutes 50 seconds</h2>
                     <br />
                     <div className="flex items-center">
-                        <Link to={ `/product/${ product.id }?isEvent=true` }>
+                        <Link to={ `/product-details/${ product.id }?isEvent=true` }>
                             <div className={ `${ styles.button } text-[#fff]` }>See Details</div>
                         </Link>
                         <div className={ `${ styles.button } text-[#fff] ml-5` } onClick={ () => addToCartHandler( product ) }>Add to cart</div>

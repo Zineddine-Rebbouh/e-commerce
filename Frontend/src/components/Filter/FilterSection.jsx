@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import CategoriesFilter from './CategoriesFilter';
 import PriceFilter from './PriceFilter';
-import ColorFilter from './ColorFilter';
 import StarRatingFilter from './StarRatingFilter';
+import { useQuery } from 'react-query';
+import * as apiClient from "../../api/api-Client"
 
-const FilterSection = () => {
+const FilterSection = ( { selectedCategory, setSelectedCategory, selectedStars, setSelectedStars, selectedPrice, setSelectedPrice } ) => {
 
-    const [ selectedCategory, setSelectedCategory ] = useState();
-    const [ selectedColor, setSelectedColor ] = useState( [] );
-    const [ selectedStars, setSelectedStars ] = useState( [] );
-    const [ selectedPrice, setSelectedPrice ] = useState();
+    const { data: categories } = useQuery( "categories", apiClient.getCateogries );
 
     const handleStarsChange = ( event ) => {
         const starRating = event.target.value;
@@ -19,17 +17,9 @@ const FilterSection = () => {
                 ? [ ...prevStars, starRating ]
                 : prevStars.filter( ( star ) => star !== starRating )
         );
+        console.log( selectedStars );
     };
 
-    const handleColorChange = ( event ) => {
-        const color = event.target.value;
-
-        selectedColor( ( prevStars ) =>
-            event.target.checked
-                ? [ ...prevStars, color ]
-                : prevStars.filter( ( clr ) => clr !== color )
-        );
-    };
 
     return (
         <div className="rounded-lg border border-slate-300 p-5 h-fit sticky top-10 bg-white shadow-lg">
@@ -38,12 +28,9 @@ const FilterSection = () => {
                     Filter by:
                 </h3>
                 <CategoriesFilter
+                    categories={ categories }
                     selectedCategory={ selectedCategory }
                     onChange={ ( value ) => setSelectedCategory( value ) }
-                />
-                <ColorFilter
-                    selectedCategory={ selectedColor }
-                    onChange={ handleColorChange }
                 />
                 <StarRatingFilter
                     selectedStars={ selectedStars }
@@ -54,6 +41,15 @@ const FilterSection = () => {
                     onChange={ ( value ) => setSelectedPrice( value ) }
                 />
             </div>
+            <button className=' bg-slate-500 text-white p-2 w-full mt-5 hover:opacity-80   '
+                onClick={ () => {
+                    setSelectedCategory( "" );
+                    setSelectedStars( [] );
+                    setSelectedPrice( 0 );
+                } }
+            >
+                Clear
+            </button>
         </div>
     )
 }

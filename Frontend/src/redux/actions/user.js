@@ -8,6 +8,15 @@ export const LoadUser = () => async dispatch => {
       method: "GET",
       credentials: "include",
     })
+
+    if (!res.ok) {
+      dispatch({
+        type: "LoadUserFailure",
+        payload: "You need to login first",
+      })
+      return
+    }
+
     const data = await res.json()
     dispatch({
       type: "LoadUserSuccess",
@@ -15,7 +24,7 @@ export const LoadUser = () => async dispatch => {
     })
   } catch (error) {
     dispatch({
-      type: "LoadUserFail",
+      type: "clearError",
       payload: error.response.data.message,
     })
   }

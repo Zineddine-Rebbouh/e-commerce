@@ -3,30 +3,23 @@ import Search from "../components/Search/search";
 import Pagination from "../components/pagination";
 import * as apiClient from '../api/api-Client'
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 
 
 const ProductsPage = () => {
-    const [ products, setProducts ] = useState( [] );
+    const { products, isLoading } = useSelector( state => state.products );
+    const data = products.map( ( product ) => { return { ...product, createdAt: new Date( product.createdAt ).toLocaleDateString() } } );
 
-    useEffect( () => {
-        const fetchProducts = async () => {
-            try
-            {
-                const response = await apiClient.getProducts();
-                setProducts( response.products );
-            } catch ( error )
-            {
-                console.error( error );
-            }
-        }
-        fetchProducts();
-    }, [] );
+
+
+
 
     console.log( products );
 
     const count = products.length;
 
+    if ( isLoading ) return <Loader />
     return (
         <div className={ "bg-white p-5 rounded-lg mt-5" }>
             <div className={ "" }>
@@ -44,7 +37,7 @@ const ProductsPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    { products.map( ( product ) => (
+                    { data.map( ( product ) => (
                         <tr key={ product.id }>
                             <td className="py-2">
                                 <div className={ "flex items-center gap-2" }>

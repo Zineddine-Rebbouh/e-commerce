@@ -1,21 +1,26 @@
+import { TextField } from "@mui/material";
+
 const PriceFilter = ( { selectedPrice, onChange } ) => {
+    const handlePriceChange = ( event ) => {
+        const price = event.target.value.replace( /\D/g, '' ); // Remove non-numeric characters
+        if ( price !== '' && parseInt( price ) < 0 ) return; // Ignore negative values
+        onChange( price === '' ? undefined : parseInt( price ) );
+    };
+
     return (
         <div>
-            <h4 className="text-md font-semibold mb-2"> Max Price</h4>
-            <select
-                className="p-2 border rounded-md w-full"
-                value={ selectedPrice }
-                onChange={ ( event ) =>
-                    onChange(
-                        event.target.value ? parseInt( event.target.value ) : undefined
-                    )
-                }
-            >
-                <option value="">Select Max Price</option>
-                { [ 50, 100, 200, 300, 500 ].map( ( price ) => (
-                    <option value={ price }>{ price }</option>
-                ) ) }
-            </select>
+            <TextField
+                className="w-full"
+                id="outlined-basic"
+                label="Enter Max Price"
+                variant="outlined"
+                type="number"
+                value={ selectedPrice === undefined ? '' : selectedPrice }
+                onChange={ handlePriceChange }
+                InputProps={ {
+                    inputProps: { min: 0 },
+                } }
+            />
         </div>
     );
 };

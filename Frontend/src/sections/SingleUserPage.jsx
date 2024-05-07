@@ -75,7 +75,7 @@ const SingleUserPage = () => {
                         name="address"
                         placeholder={ user.address }
                     />
-                    <label className="text-sm">Is Admin?</label>
+                    <label className="text-sm">Role</label>
                     <input
                         className="p-3 border-2 border-solid border-[#2e374a] rounded-sm bg-white text-gray-300 my-2.5 mx-0"
                         type="text"

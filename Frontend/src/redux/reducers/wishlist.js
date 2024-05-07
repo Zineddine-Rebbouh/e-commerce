@@ -10,17 +10,20 @@ export const wishlistReducer = createReducer(initialState, builder => {
   builder
     .addCase("addToWishlist", (state, action) => {
       const item = action.payload
-      const isItemExist = state.wishlist.find(i => i.id === item.id)
-      if (isItemExist) {
-        // Instead of returning a new state, directly modify the draft state provided by Immer
-        state.wishlist = state.wishlist.map(i =>
-          i.id === isItemExist.id ? item : i
+      const existingIndex = state.wishlist.findIndex(i => i._id === item._id)
+
+      if (existingIndex !== -1) {
+        state.wishlist = state.wishlist.map((i, index) =>
+          index === existingIndex ? item : i
         )
       } else {
-        state.wishlist.push(item) // Directly modify the array by pushing the new item
+        // Add new item to wishlist if it doesn't exist
+        state.wishlist.push(item)
       }
+      localStorage.setItem("wishlistItems", JSON.stringify(state.wishlist))
     })
     .addCase("removeFromWishlist", (state, action) => {
-      state.wishlist = state.wishlist.filter(i => i.id !== action.payload) // Directly modify the draft state
+      state.wishlist = state.wishlist.filter(i => i._id !== action.payload)
+      localStorage.setItem("wishlistItems", JSON.stringify(state.wishlist))
     })
 })

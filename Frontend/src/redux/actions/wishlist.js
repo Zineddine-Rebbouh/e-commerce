@@ -16,7 +16,7 @@ export const addToWishlist = data => async (dispatch, getState) => {
 export const removeFromWishlist = data => async (dispatch, getState) => {
   dispatch({
     type: "removeFromWishlist",
-    payload: data.id,
+    payload: data,
   })
   localStorage.setItem(
     "wishlistItems",

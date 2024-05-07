@@ -1,56 +1,61 @@
-const express = require("express");
+const express = require("express")
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 // POST endpoint handler
 const Checkout = async (req, res) => {
   try {
-    const { cartItems } = req.body;
-    if (!cartItems) {
-      return res.status(400).send("Not enough data to checkout");
-    }
+    console.log("chechout controller1")
+    const { cartItems } = req.body
 
-    console.log(cartItems);
+    console.log(cartItems)
+    if (!cartItems) {
+      return res.status(400).send("Not enough data to checkout")
+    }
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
       shipping_address_collection: {
-        allowed_countries: ["DZ"],
+        allowed_countries: ["US"], // Update allowed countries if necessary
       },
       shipping_options: [
-        { shipping_rate: "shr_1P1XrrACnMCxOPfXhRZyWBUl" },
-        { shipping_rate: "shr_1P1XszACnMCxOPfXGGoiZvPJ" },
+        { shipping_rate: "shr_1PCoo5ACnMCxOPfXgUqXuG5p" },
+        { shipping_rate: "shr_1PConWACnMCxOPfXIBHsJON5" },
       ],
-      line_items: cartItems.map((cartItem) => ({
+      line_items: cartItems.map(cartItem => ({
         price_data: {
-          currency: "DZD",
+          currency: "USD", // Change currency to USD
           product_data: {
             name: cartItem.name,
             metadata: {
-              productId: cartItem.id,
-              description: cartItem.description,
-              url: cartItem.image_Url.url,
-              // ...(cartItem.description && {
-              //   description: cartItem.description,
-              // }),
-              // ...(cartItem.image_Url.url && { url: cartItem.image_Url.url }),
+              productId: cartItem._id,
+              description: truncateDescription(cartItem.description), // Truncate description
+              url: cartItem.image.url,
+              shopId: cartItem.shopId._id,
             },
           },
           unit_amount: cartItem.price * 100,
         },
-        quantity: cartItem.stock,
+        quantity: cartItem.quantity,
       })),
       client_reference_id: req.userId,
       success_url: `${process.env.ECOMMERCE_STORE_URL}/success`,
       cancel_url: `${process.env.ECOMMERCE_STORE_URL}/cancel`,
-    });
-    console.log(session);
-    res.status(200).json(session);
-  } catch (err) {
-    console.log("here erreur : ");
-    console.error(err);
-    res.status(500).send("Internal Server Error");
-  }
-};
+    })
 
-module.exports = { Checkout };
+    res.status(200).json(session)
+  } catch (err) {
+    console.error("Error during checkout:", err)
+    res.status(500).send("Internal Server Error")
+  }
+}
+
+// Function to truncate description if it exceeds 500 characters
+const truncateDescription = description => {
+  const maxLength = 500
+  return description.length > maxLength
+    ? description.slice(0, maxLength)
+    : description
+}
+
+module.exports = { Checkout }

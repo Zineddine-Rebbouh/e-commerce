@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as apiClient from "../../api/api-Client";
 import { useMutation } from "react-query";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const ProfileSideBar = ( { active, setActive } ) => {
   const user = useSelector( ( state ) => state.user );
@@ -43,68 +43,82 @@ const ProfileSideBar = ( { active, setActive } ) => {
 
   return (
     <div className="w-full h-full flex flex-col gap-3 justify-center bg-white shadow-sm rounded-[10px] p-4 pt-8 border border-gray-100">
-      <ToastContainer position="top-center" autoClose={ 2000 } />
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={ () => setActive( 1 ) }
-      >
-        <RxPerson size={ 20 } color={ active === 1 ? "red" : "" } />
-        <span
-          className={ `pl-3 ${ active === 1 ? "text-[red]" : ""
-            } hidden md:block ` }
+      <Link to="/profile">
+        <div
+          className="flex items-center cursor-pointer w-full mb-8"
+          onClick={ () => setActive( 1 ) }
         >
-          Profile
-        </span>
-      </div>
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={ () => setActive( 2 ) }
-      >
-        <HiOutlineShoppingBag size={ 20 } color={ active === 2 ? "red" : "" } />
-        <span
-          className={ `pl-3 ${ active === 2 ? "text-[red]" : "" } hidden md:block` }
+          <RxPerson size={ 20 } color={ active === 1 ? "red" : "" } />
+          <span
+            className={ `pl-3 ${ active === 1 ? "text-[red]" : "" } hidden md:block` }
+          >
+            Profile
+          </span>
+        </div>
+      </Link>
+      <Link to="/profile/orders">
+        <div
+          className="flex items-center cursor-pointer w-full mb-8"
+          onClick={ () => setActive( 2 ) }
         >
-          Orders
-        </span>
-      </div>
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={ () => setActive( 3 ) }
-      >
-        <HiOutlineReceiptRefund size={ 20 } color={ active === 3 ? "red" : "" } />
-        <span
-          className={ `pl-3 ${ active === 3 ? "text-[red]" : "" } hidden md:block` }
+          <HiOutlineShoppingBag
+            size={ 20 }
+            color={ active === 2 ? "red" : "" }
+          />
+          <span
+            className={ `pl-3 ${ active === 2 ? "text-[red]" : "" } hidden md:block` }
+          >
+            Orders
+          </span>
+        </div>
+      </Link>
+      <Link to="/profile/refunds">
+        <div
+          className="flex items-center cursor-pointer w-full mb-8"
+          onClick={ () => setActive( 3 ) }
         >
-          Refunds
-        </span>
-      </div>
+          <HiOutlineReceiptRefund
+            size={ 20 }
+            color={ active === 3 ? "red" : "" }
+          />
+          <span
+            className={ `pl-3 ${ active === 3 ? "text-[red]" : "" } hidden md:block` }
+          >
+            Refunds
+          </span>
+        </div>
+      </Link>
 
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={ () => setActive( 4 ) }
-      >
-        <AiOutlineMessage size={ 20 } color={ active === 4 ? "red" : "" } />
-        <span
-          className={ `pl-3 ${ active === 4 ? "text-[red]" : "" } hidden md:block` }
+      <Link to="/profile/messages">
+        <div
+          className="flex items-center cursor-pointer w-full mb-8"
+          onClick={ () => setActive( 4 ) }
         >
-          Inbox
-        </span>
-      </div>
+          <AiOutlineMessage size={ 20 } color={ active === 4 ? "red" : "" } />
+          <span
+            className={ `pl-3 ${ active === 4 ? "text-[red]" : "" } hidden md:block` }
+          >
+            Inbox
+          </span>
+        </div>
+      </Link>
 
-      <div
-        className="flex items-center cursor-pointer w-full mb-8"
-        onClick={ () => setActive( 5 ) }
-      >
-        <MdOutlineTrackChanges size={ 20 } color={ active === 5 ? "red" : "" } />
-        <span
-          className={ `pl-3 ${ active === 5 ? "text-[red]" : "" } hidden md:block` }
+      <Link to="/profile/track-order">
+        <div
+          className="flex items-center cursor-pointer w-full mb-8"
+          onClick={ () => setActive( 5 ) }
         >
-          Track Order
-        </span>
-      </div>
+          <MdOutlineTrackChanges size={ 20 } color={ active === 5 ? "red" : "" } />
+          <span
+            className={ `pl-3 ${ active === 5 ? "text-[red]" : "" } hidden md:block` }
+          >
+            Track Order
+          </span>
+        </div>
+      </Link>
 
       { user && user?.role === "Admin" && (
-        <Link to="/dashboard">
+        <Link to="/profile/admin-dashboard">
           <div
             className="flex items-center cursor-pointer w-full mb-8"
             onClick={ () => setActive( 8 ) }
