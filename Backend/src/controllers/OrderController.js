@@ -1,11 +1,13 @@
-const LineItems = require("../models/LineOrderItems")
+const LineOrderItems = require("../models/LineOrderItems")
 const Order = require("../models/Order")
 
 const getOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({
-      createdAt: -1,
-    })
+    const orders = await Order.find()
+      .sort({
+        createdAt: -1,
+      })
+      .populate("userId", "name email")
     console.log(orders)
     res.status(200).json({ orders })
   } catch (error) {
@@ -24,9 +26,9 @@ const getOrder = async (req, res) => {
       return next(new ErrorHandler("Order not found", 404))
     }
 
-    const items = await LineItems.find({ orderId: order._id }).populate(
-      "productId"
-    )
+    const items = await LineOrderItems.find({
+      orderId: order._id,
+    }).populate("productId")
 
     const productInfos = items.map(item => ({
       ...item.productId,
@@ -51,6 +53,28 @@ const getOrderByUserId = async (req, res) => {
       })
       .populate("userId", "name email")
 
+    if (!orders) {
+      return res.status(404).json([])
+    }
+
+    for (let i = 0; i < orders.length; i++) {
+      const items = await LineOrderItems.find({ orderId: orders[i]._id })
+
+      const productInfos = items.map(item => ({
+        ...item.productId,
+      }))
+
+      // Extracting productIds into an array
+      const productIds = items.map(item => item.productId._id)
+
+      // Adding productIds array to each order object
+      orders[i] = {
+        ...orders[i].toObject(),
+        items: productInfos,
+        productIds: productIds,
+      }
+    }
+
     console.log(orders)
 
     res.status(200).json(orders)
@@ -60,4 +84,23 @@ const getOrderByUserId = async (req, res) => {
   }
 }
 
-module.exports = { getOrders, getOrder, getOrderByUserId }
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body
+    const order = await Order.findById(req.params.id)
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" })
+    }
+
+    order.status = status
+    await order.save()
+
+    res.status(200).json({ message: "Order status updated successfully" })
+  } catch (error) {
+    console.error(error.message)
+    return res.status(500).json({ message: error.message })
+  }
+}
+
+module.exports = { getOrders, getOrder, getOrderByUserId, updateOrderStatus }

@@ -3,6 +3,7 @@ import { products } from '../../constants/data'
 import { Link } from 'react-router-dom'
 import styles from '../../utils/styles'
 import Container from '../../layout/Container'
+import CountDown from './CountDown'
 
 const EventCard = () => {
     const product = products[ 2 ]
@@ -31,14 +32,16 @@ const EventCard = () => {
                                 { product.price }$
                             </h5>
                             <h5 className="font-bold text-[20px] text-[#333] font-Roboto">
-                                299$
+                                40$
                             </h5>
                         </div>
                         <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
                             23 sold
                         </span>
                     </div>
-                    <h2 className='text-3xl text-blue '>2 days 3 hours 14 minutes 50 seconds</h2>
+                    {/* <h2 className='text-3xl text-blue '>2 days 3 hours 14 minutes 50 seconds</h2> */ }
+                    <CountDown data={ product } />
+
                     <br />
                     <div className="flex items-center">
                         <Link to={ `/product-details/${ product.id }?isEvent=true` }>

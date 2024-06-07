@@ -4,6 +4,8 @@ const { validationResult } = require("express-validator")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 const uploadImage = require("../utils/uploadImage")
+const Cart = require("../models/Cart")
+const Whishlist = require("../models/Whishlist")
 
 const login = async (req, res) => {
   try {
@@ -28,7 +30,7 @@ const login = async (req, res) => {
         message: "Invaild Credentails",
       })
     }
-    // Sign JSON Web Token
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1d",
     })
@@ -57,8 +59,6 @@ const register = async (req, res) => {
         error: errors.array(),
       })
     }
-    console.log(req.body)
-
     const { name, email, password, phoneNumber } = req.body
     let user = await User.findOne({ email })
     if (user) {
@@ -70,16 +70,14 @@ const register = async (req, res) => {
       password,
       phoneNumber,
     })
-
     const salt = await bcrypt.genSalt(10)
     user.password = await bcrypt.hash(password, salt)
     if (req.file) {
-      user.avatar = await uploadImage(req.file) // Assuming Multer has stored the file path in 'req.file.path'
+      user.avatar = await uploadImage(req.file)
     } else {
       user.avatar = null
     }
     await user.save()
-
     // creating token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1d",
@@ -91,6 +89,11 @@ const register = async (req, res) => {
       maxAge: 86400000, // ttl in seconds (remove this option and cookie will die when browser is closed)
     }
     res.cookie("auth_token", token, cookieConfig)
+
+    // createa user cart and whishlist
+    const cart = new Cart({ userId: user._id })
+    await cart.save()
+
     return res.status(201).send({ message: "registration success " })
   } catch (err) {
     console.error(err.message)

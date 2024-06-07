@@ -1,6 +1,7 @@
-// get all sellers --- admin
-import { useSelector } from "react-redux" // This line should be removed, explanation below
-import * as apiClient from "../../api/api-Client" // Assuming this is the correct path to your API client
+// shopActions.js
+
+import * as apiClient from "../../api/api-Client"
+
 export const getShopDetails = shopId => async dispatch => {
   try {
     dispatch({
@@ -16,7 +17,26 @@ export const getShopDetails = shopId => async dispatch => {
   } catch (error) {
     dispatch({
       type: "getShopDetailsFailed",
-      //   payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message,
+    })
+  }
+}
+
+export const updateShopDetails = (shopId, shopDetails) => async dispatch => {
+  try {
+    dispatch({
+      type: "updateShopDetailsRequest",
+    })
+
+    const data = await apiClient.updateShop(shopId, shopDetails)
+    dispatch({
+      type: "updateShopDetailsSuccess",
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: "updateShopDetailsFailed",
+      payload: error.response?.data?.message || error.message,
     })
   }
 }

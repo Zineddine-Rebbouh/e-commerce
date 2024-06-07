@@ -2,13 +2,13 @@ import { MdPlayCircleFilled, MdReadMore } from "react-icons/md";
 
 const Rightbar = () => {
     return (
-        <div className={ "" }>
-            <div className={ "" }>
+        <div className={ "space-y-4" }>
+            <div className={ "bg-white rounded-lg p-2" }>
                 <div className={ "" }>
                     <img src="/astronaut.png" alt="" fill />
                 </div>
                 <div className={ "" }>
-                    <span className={ "" }>🔥 Available Now</span>
+                    <span className={ "font-bold text-lg" }>🔥 Available Now</span>
                     <h3 className={ "" }>
                         How to use the new version of the admin dashboard ?
                     </h3 >
@@ -18,14 +18,14 @@ const Rightbar = () => {
                         Reprehenderit eius libero perspiciatis recusandae possimus.
                     </p>
                     <button className={ "" }>
-                        <MdPlayCircleFilled />
+                        <MdPlayCircleFilled size={ 24 } />
                         Watch
                     </button >
                 </div >
             </div >
-            <div className={ "" }>
+            <div className={ "bg-white rounded-lg p-2" }>
                 <div className={ "" }>
-                    <span className={ "" }>🚀 Coming Soon</span>
+                    <span className={ "font-bold text-lg" }>🚀 Coming Soon</span>
                     <h3 className={ "" }>
                         New server actions are available, partial pre-rendering is coming
                         up!
@@ -36,7 +36,7 @@ const Rightbar = () => {
                         Reprehenderit eius libero perspiciatis recusandae possimus.
                     </p>
                     <button className={ "" }>
-                        <MdReadMore />
+                        <MdReadMore size={ 24 } />
                         Learn
                     </button>
                 </div >

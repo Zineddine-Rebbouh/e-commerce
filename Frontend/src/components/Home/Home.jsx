@@ -5,9 +5,22 @@ import BestDeals from './BestDeals'
 import FeaturedProducts from './FeaturedProducts'
 import EventCard from '../Events/EventCard'
 import { useDispatch } from 'react-redux'
-import { getAllProducts } from '../../redux/actions/product'
+import { getUserCartItems } from '../../redux/actions/cart'
+import { useSelector } from 'react-redux'
+import { getUserWhilistItems } from '../../redux/actions/wishlist'
+import { getAllOrdersOfUser } from '../../redux/actions/order'
+
+
 
 const Home = () => {
+
+
+    const { user } = useSelector( state => state.user )
+    const dispatch = useDispatch()
+
+    useEffect( () => {
+        dispatch( getAllOrdersOfUser( user?._id ) );
+    }, [ user?._id ] )
 
     return (
         <div className='p-8'>

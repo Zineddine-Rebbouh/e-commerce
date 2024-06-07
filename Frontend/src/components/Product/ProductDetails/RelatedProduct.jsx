@@ -8,8 +8,7 @@ import { useParams } from 'react-router-dom'
 
 const RelatedProduct = ( { categoryId } ) => {
     const { id } = useParams();
-    console.log( categoryId, id );
-    const { data: products, isLoading, isError, error } = useQuery( [ "product", categoryId ], () => apiClient.getProductByCategory( categoryId, id ), {
+    const { data: products, isLoading, isError, error } = useQuery( [ "product" ], () => apiClient.getProductByCategory( id ), {
         onSuccess: ( data ) => console.log( "Product data:", data ),
         onError: ( error ) => console.error( "Error fetching product:", error ),
     } );

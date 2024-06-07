@@ -1,119 +1,139 @@
-import React, { useState } from 'react';
-import { AiOutlineCamera } from 'react-icons/ai';
-import { TextField, Button, CircularProgress } from '@mui/material';
-import Avatar from '../../Header/NavBar/Avatar';
-import { useDispatch, useSelector } from 'react-redux';
-import { Loader } from '../../Loader/Loader';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Input, Button, Form, Upload, Avatar, Spin } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { updateShopDetails } from '../../../redux/actions/shop';
 
 const ShopProfile = () => {
-    const dispatch = useDispatch();
     const { shop, isLoading } = useSelector( ( state ) => state.shop );
-    const [ updatedShop, setUpdatedShop ] = useState( shop );
+    const dispatch = useDispatch();
+    const [ storeForm, setStoreForm ] = useState( {} );
+    const [ avatarFile, setAvatarFile ] = useState( null );
+    const [ form ] = Form.useForm();
 
-    const handleImage = ( e ) => {
-        const file = e.target.files[ 0 ];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setUpdatedShop( { ...updatedShop, avatar: reader.result } );
-        };
-        reader.readAsDataURL( file );
+    useEffect( () => {
+        if ( shop )
+        {
+            setStoreForm( {
+                ...shop,
+            } );
+            form.setFieldsValue( shop ); // Set form fields value when shop data is available
+        }
+    }, [ shop, form ] );
+
+    const handleStoreChange = ( e ) => {
+        setStoreForm( { ...storeForm, [ e.target.name ]: e.target.value } );
     };
 
-    const handleChange = ( e ) => {
-        const { name, value } = e.target;
-        setUpdatedShop( { ...updatedShop, [ name ]: value } );
+    const handleImageChange = ( info ) => {
+        if ( info.file.status === 'done' || info.file.status === 'uploading' )
+        {
+            setAvatarFile( info.file.originFileObj );
+            const reader = new FileReader();
+            reader.onload = () => {
+                setStoreForm( { ...storeForm, avatar: reader.result } );
+                form.setFieldsValue( { avatar: reader.result } );
+            };
+            reader.readAsDataURL( info.file.originFileObj );
+        }
     };
 
-    const handleSubmit = ( e ) => {
-        e.preventDefault();
+    const handleStoreSubmit = ( values ) => {
+        const formData = new FormData();
+        for ( const key in values )
+        {
+            if ( values.hasOwnProperty( key ) )
+            {
+                formData.append( key, values[ key ] );
+            }
+        }
+        if ( avatarFile )
+        {
+            formData.append( 'avatar', avatarFile );
+        }
+        dispatch( updateShopDetails( shop._id, formData ) ); // Assuming shop._id is the shop identifier
     };
-
-    if ( isLoading ) return <Loader />;
 
     return (
-        <div className="w-full border border-gray-100 p-4">
-            <>
-                <div className="flex justify-center w-full">
-                    <div className="relative mt-5">
-                        <Avatar src={ updatedShop?.avatar } widthImage={ 150 } heightImage={ 150 } />
-                        <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-                            <input type="file" id="image" className="hidden" onChange={ handleImage } />
-                            <label htmlFor="image">
-                                <AiOutlineCamera />
-                            </label>
+        <div className="p-4 h-full" style={ { boxShadow: "2px 4px 16px #0000001c" } }>
+            <h3 className="text-2xl mb-2 mt-8 font-medium">Store Information</h3>
+            { isLoading ? (
+                <Spin />
+            ) : (
+                <div>
+                    <div className="flex items-center mb-4">
+                        <Avatar src={ storeForm.avatar } size={ 64 } className="mr-4" />
+                        <div>
+                            <h2 className="text-xl">{ storeForm.name }</h2>
                         </div>
                     </div>
-                </div>
-                <br />
-                <br />
-                <div className="w-full px-5 space-y-10">
-                    <form onSubmit={ handleSubmit } aria-required={ true } className='space-y-10'>
-                        <TextField
-                            label="Full Name"
+
+                    <Form
+                        layout="vertical"
+                        form={ form }
+                        onFinish={ handleStoreSubmit }
+                        initialValues={ storeForm }
+                        className="grid grid-cols-2 gap-4"
+                    >
+                        <Form.Item label="Upload Store Image" className="col-span-2">
+                            <Upload
+                                name="avatar"
+                                listType="picture"
+                                showUploadList={ false }
+                                onChange={ handleImageChange }
+                                accept="image/*"
+                            >
+                                <Button icon={ <UploadOutlined /> }>Upload Store Image</Button>
+                            </Upload>
+                        </Form.Item>
+                        <Form.Item
                             name="name"
-                            variant="outlined"
-                            fullWidth
-                            required
-                            value={ updatedShop.name }
-                            onChange={ handleChange }
-                            className="mb-4"
-                        />
-                        <TextField
-                            label="Email Address"
-                            name="email"
-                            type="email"
-                            variant="outlined"
-                            fullWidth
-                            required
-                            value={ updatedShop.email }
-                            onChange={ handleChange }
-                            className="mb-4"
-                        />
-                        <TextField
-                            label="Phone Number"
-                            name="phoneNumber"
-                            type="number"
-                            variant="outlined"
-                            fullWidth
-                            required
-                            value={ updatedShop.phoneNumber }
-                            onChange={ handleChange }
-                            className="mb-4"
-                        />
-                        <TextField
-                            label="Address"
-                            name="address"
-                            variant="outlined"
-                            fullWidth
-                            required
-                            value={ updatedShop.address }
-                            onChange={ handleChange }
-                            className="mb-4"
-                        />
-                        <TextField
-                            label="Zip Code"
-                            name="zipCode"
-                            type="number"
-                            variant="outlined"
-                            fullWidth
-                            required
-                            value={ updatedShop.zipCode }
-                            onChange={ handleChange }
-                            className="mb-4"
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            disabled={ isLoading }
-                            startIcon={ isLoading ? <CircularProgress size={ 20 } color="inherit" /> : null }
+                            label="Store Name"
+                            rules={ [ { required: true, message: 'Please input the store name!' } ] }
+                            className="col-span-2"
                         >
-                            Update
-                        </Button>
-                    </form>
+                            <Input name="name" value={ storeForm.name } onChange={ handleStoreChange } />
+                        </Form.Item>
+                        <Form.Item
+                            name="description"
+                            label="Description"
+                            rules={ [ { required: true, message: 'Please input the store description!' } ] }
+                            className="col-span-2"
+                        >
+                            <Input name="description" value={ storeForm.description } onChange={ handleStoreChange } />
+                        </Form.Item>
+                        <Form.Item
+                            name="email"
+                            label="Store Email"
+                            rules={ [ { required: true, message: 'Please input the store email!' } ] }
+                            className="col-span-2"
+                        >
+                            <Input name="email" value={ storeForm.email } onChange={ handleStoreChange } />
+                        </Form.Item>
+                        <Form.Item
+                            name="address"
+                            label="Store Address"
+                            rules={ [ { required: true, message: 'Please input the store address!' } ] }
+                            className="col-span-2"
+                        >
+                            <Input name="address" value={ storeForm.address } onChange={ handleStoreChange } />
+                        </Form.Item>
+                        <Form.Item
+                            name="phoneNumber"
+                            label="Phone Number"
+                            rules={ [ { required: true, message: 'Please input the phone number!' } ] }
+                            className="col-span-2"
+                        >
+                            <Input name="phoneNumber" value={ storeForm.phoneNumber } onChange={ handleStoreChange } />
+                        </Form.Item>
+                        <Form.Item className="col-span-2">
+                            <Button type="primary" htmlType="submit" block>
+                                Update Store Information
+                            </Button>
+                        </Form.Item>
+                    </Form>
                 </div>
-            </>
+            ) }
         </div>
     );
 };

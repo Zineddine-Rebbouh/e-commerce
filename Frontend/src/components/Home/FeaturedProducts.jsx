@@ -4,12 +4,16 @@ import styles from "../../utils/styles";
 import ProductCard from "../Product/ProductCard";
 import * as apiClient from "../../api/api-Client";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 
 
 const FeaturedProducts = () => {
-    const { data: productData } = useQuery( "products", apiClient.getProducts );
+    const { data: productData } = useQuery( "FeaturedProducts", apiClient.getFeatureProducts );
 
     const products = productData?.sort( ( a, b ) => b.total_sell - a.total_sell );
+
+    //slice the first 5 products
+    products?.slice( 0, 9 );
 
     return (
         <div>
@@ -20,12 +24,12 @@ const FeaturedProducts = () => {
                 <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12 border-0">
                     {
                         <>
-                            { productData && productData.map( ( i, index ) => <ProductCard data={ i } key={ index } /> ) }
+                            { products && products?.map( ( i, index ) => <ProductCard data={ i } key={ index } /> ) }
                         </>
                     }
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

@@ -3,7 +3,7 @@ import Container from "../../layout/Container";
 import { Divider } from "@mui/material";
 import Button from "../Buttons/AddToCartButton";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart, updateCart } from "../../redux/actions/cart";
+import { getUserCartItems, removeFromCart, updateCart } from "../../redux/actions/cart";
 import * as apiClient from "../../api/api-Client";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +29,8 @@ const ShoppingCart = () => {
 
   const removeProductFromCart = ( productId ) => {
     console.log( productId );
-    dispatch( removeFromCart( productId ) );
+    const userId = user?._id;
+    dispatch( removeFromCart( productId, userId ) );
   };
 
   const [ amount, setAmount ] = useState( 0 );
@@ -57,11 +58,11 @@ const ShoppingCart = () => {
     const updatedCartItems = cartItems.map( ( item ) =>
       item._id === productId ? { ...item, quantity: item.quantity + 1 } : item
     );
-    setCartItems( updatedCartItems );
+    setCartItems( updatedCartItems )
 
     // Dispatch the action with the updated cart items
-    dispatch( updateCart( updatedCartItems ) );
-  };
+    dispatch( updateCart( updatedCartItems ) )
+  }
 
   const handleDecreaseQuantity = ( productId ) => {
     // Update the quantity in the local state
@@ -71,14 +72,12 @@ const ShoppingCart = () => {
         : item
     );
     setCartItems( updatedCartItems );
-
     // Dispatch the action with the updated cart items
     dispatch( updateCart( updatedCartItems ) );
   };
 
 
   const handlecheckout = async () => {
-
     if ( user )
     {
       mutate( cartItems, user );
@@ -87,7 +86,9 @@ const ShoppingCart = () => {
       sessionStorage.setItem( "redirectUrl", window.location.pathname );
       navigate( '/sign-in' )
     }
-  };
+  }
+
+
 
   return (
     <div>
@@ -98,11 +99,11 @@ const ShoppingCart = () => {
               Shopping Cart ( { cartCounter } items)
             </p>
             <hr className="my-6" />
-            { cart.length === 0 ? (
+            { cart?.length === 0 ? (
               <p className="text-heading4">Your cart is empty</p>
             ) : (
               <div>
-                { cart.map( ( product ) => (
+                { cart?.map( ( product ) => (
                   <div
                     key={ product.id }
                     className="w-full flex hover:bg-grey-1 px06 py-5 items-center justify-between"
@@ -166,14 +167,14 @@ const ShoppingCart = () => {
                 >
                   <div className="flex justify-between">
                     <p className="text-body">* { product.name }</p>
-                    <p className="text-body">${ product.price }</p>
+                    <p className="text-body">{ product.isHavingDiscount ? product.discountedPrice : product.price } DZD</p>
                   </div>
                 </div>
               ) ) }
               <hr className="my-6" />
               <div className="flex justify-between mb-4">
                 <p className="font-bold">Total</p>
-                <p className="font-bold">${ amount }</p>
+                <p className="font-bold">{ amount } DZD</p>
               </div>
               <Button
                 onClick={ () => handlecheckout() }

@@ -1,11 +1,13 @@
 const Review = require("../models/Review")
 const Product = require("../models/Product")
+const uploadImage = require("../utils/uploadImage")
 
 // @desc    Create new review
 
 const createReview = async (req, res) => {
   const { rating, comment } = req.body
-
+  console.log("req.body")
+  console.log(req.body)
   const { id } = req.params
 
   try {
@@ -13,6 +15,13 @@ const createReview = async (req, res) => {
 
     if (product) {
       // productId saved in reviews schema so you need to search in side the reviews array
+      const uploadedImages = []
+      console.log("req.files")
+      console.log(req.files)
+      // for (const file of req.files) {
+      //   const imageUrl = await uploadImage(file)
+      //   uploadedImages.push(imageUrl)
+      // }
 
       console.log(req.userId)
       const review = new Review({
@@ -20,7 +29,12 @@ const createReview = async (req, res) => {
         comment,
         productId: id,
         userId: req.userId,
+        screenshots: uploadedImages,
       })
+
+      // edit the rating product
+      product.rating = (product.rating + rating) / 2
+      await product.save()
 
       await review.save()
       res.status(201).json({ message: "Review added" })

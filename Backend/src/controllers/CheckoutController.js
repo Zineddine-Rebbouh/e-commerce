@@ -1,5 +1,6 @@
 const express = require("express")
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
+const Cart = require("../models/Cart")
 
 // POST endpoint handler
 const Checkout = async (req, res) => {
@@ -42,6 +43,10 @@ const Checkout = async (req, res) => {
       success_url: `${process.env.ECOMMERCE_STORE_URL}/success`,
       cancel_url: `${process.env.ECOMMERCE_STORE_URL}/cancel`,
     })
+
+    //clear user cart
+
+    await Cart.findOneAndDelete({ userId: req.userId })
 
     res.status(200).json(session)
   } catch (err) {

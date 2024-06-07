@@ -20,9 +20,12 @@ const userSchema = new mongoose.Schema(
       min: 6,
       max: 1024,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
     role: {
       type: String,
-      required: false,
       enum: ["Admin", "Customer", "Seller"],
       default: "Customer",
     },
@@ -30,25 +33,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    phoneNumber: {
-      type: String,
-      required: false,
-    },
     shopId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shop",
-    },
-    wishlist: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Wishlist",
-    },
-    cart: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Cart",
+      required: false,
     },
     orders: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Orders",
+      required: false,
     },
   },
   { timestamps: true }

@@ -21,7 +21,7 @@ const Header = () => {
     return (
         <div className=''>
             <NavigationBar />
-            <div className='transition 800px:flex items-center justify-between w-full bg-[#fd6034]'>
+            <div className='transition 800px:flex items-center justify-between w-full bg-[#4254fa]'>
                 <Container >
                     <div className='flex justify-between items-center py-4 border-b-1 '>
                         {/* <div onClick={ () => setDropDown( !dropDown ) }>
@@ -64,6 +64,7 @@ const Header = () => {
                             <Link to={ '/add-to-cart' }>
                                 <CartCount />
                             </Link>
+                            <NotificationCount />
                             <Link to="/profile">
                                 <Avatar src={ user?.avatar } />
                             </Link>

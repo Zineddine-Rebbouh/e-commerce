@@ -11,12 +11,12 @@ import { useSelector } from "react-redux";
 
 
 const Singup = () => {
-
-
+    //create states
     const [ visible1, setVisible1 ] = useState( false );
     const [ visible2, setVisible2 ] = useState( false );
     const [ avatar, setAvatar ] = useState( null );
 
+    //initialize react-hook-form
     const {
         register,
         handleSubmit,
@@ -24,9 +24,11 @@ const Singup = () => {
         formState: { errors },
     } = useForm()
 
+    //initialize react-router-dom
     const navigate = useNavigate();
     const { isAuthenticated } = useSelector( ( state ) => state.user );
 
+    //useEffect to check if the user is authenticated
     useEffect( () => {
         if ( isAuthenticated === true )
         {
@@ -34,19 +36,19 @@ const Singup = () => {
         }
     }, [] )
 
-
+    //initialize react-query
     const { mutate } = useMutation( apiClient.register, {
         onError: ( error ) => {
             toast.error( error.message, {
                 position: "top-center",
-                autoClose: 2200,
+                autoClose: 1400,
             } );
         }
         , onSuccess: async () => {
             console.log( 'register success' );
             toast.success( 'register success', {
                 position: "top-center",
-                autoClose: 2200,
+                autoClose: 1400,
 
             } );
 
@@ -57,6 +59,7 @@ const Singup = () => {
         },
     } )
 
+    //handle submit
     const onSubmit = handleSubmit( ( data ) => {
         console.log( data );
         const formData = new FormData();
@@ -72,19 +75,16 @@ const Singup = () => {
     } )
 
 
-
+    //handle file input change
     const handleFileInputChange = ( e ) => {
-
         const file = e.target.files[ 0 ];
         const reader = new FileReader();
-
         reader.onload = () => {
             if ( reader.readyState === 2 )
             {
                 setAvatar( e.target.files[ 0 ] );
             }
         };
-
         reader.readAsDataURL( file );
     };
 
@@ -93,7 +93,7 @@ const Singup = () => {
             <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
                 <ToastContainer
                     position="top-center"
-                    autoClose={ 2200 }
+                    autoClose={ 1400 }
                 />
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

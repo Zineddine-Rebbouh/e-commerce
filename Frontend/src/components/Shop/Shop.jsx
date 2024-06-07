@@ -18,7 +18,7 @@ const ShopProfile = ( { children } ) => {
     {
       dispatch( getShopDetails( user.shopId ) );
     }
-  }, [ dispatch, user?.shopId ] ); // Safely access shopId
+  }, [ user ] ); // Safely access shopId
 
   // Conditional rendering based on isLoading state
   if ( isLoading || !user?.shopId )
@@ -31,7 +31,7 @@ const ShopProfile = ( { children } ) => {
     <div className="relative min-h-screen">
       <div className="grid grid-cols-6 space-x-2 min-h-screen">
         {/* ProfileSideBar will take 1 fraction of space */ }
-        <div className="col-span-1 bg-[#040d4f]">
+        <div className="col-span-1 ">
           <ShopSidebar active={ active } setActive={ setActive } />
         </div>
         {/* ProfileSections will take the rest */ }

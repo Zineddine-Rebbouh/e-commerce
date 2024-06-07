@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const LineItemsSchema = new mongoose.Schema({
+const LineOrderItemsSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
@@ -18,6 +18,6 @@ const LineItemsSchema = new mongoose.Schema({
   },
 })
 
-const LineItems = mongoose.model("LineItems", LineItemsSchema)
+const LineOrderItems = mongoose.model("LineOrderItems", LineOrderItemsSchema)
 
-module.exports = LineItems
+module.exports = LineOrderItems

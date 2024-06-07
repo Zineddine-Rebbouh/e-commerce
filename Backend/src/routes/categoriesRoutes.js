@@ -1,8 +1,7 @@
 const express = require("express")
 const router = express.Router()
-const uploadImage = require("../utils/uploadImage")
 const {
-  addCategory,
+  addOrUpdateCategory,
   getCategories,
   removeCategory,
   getCategory,
@@ -10,10 +9,10 @@ const {
 } = require("../controllers/CategoriesController")
 const upload = require("../utils/multer")
 
-router.post("/add", upload.single("image"), addCategory)
 router.get("/", getCategories)
-router.delete("/remove/:id", removeCategory)
 router.get("/:id", getCategory)
+router.post("/add/:id", upload.single("image"), addOrUpdateCategory)
+router.delete("/remove/:id", removeCategory)
 router.put("/update/:id", updateCategory)
 
 module.exports = router

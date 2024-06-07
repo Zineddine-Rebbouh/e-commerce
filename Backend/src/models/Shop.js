@@ -23,7 +23,7 @@ const shopSchema = new mongoose.Schema({
     required: true,
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: true,
   },
   avatar: {
@@ -38,6 +38,10 @@ const shopSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  views: {
+    type: Number,
+    default: 0,
+  },
   transections: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -49,12 +53,5 @@ const shopSchema = new mongoose.Schema({
     default: Date.now(),
   },
 })
-
-// jwt token
-// shopSchema.methods.getJwtToken = function () {
-//   return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
-//     expiresIn: process.env.JWT_EXPIRES,
-//   })
-// }
 
 module.exports = mongoose.model("Shop", shopSchema)

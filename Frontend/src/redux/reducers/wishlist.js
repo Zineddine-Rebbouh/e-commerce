@@ -26,4 +26,23 @@ export const wishlistReducer = createReducer(initialState, builder => {
       state.wishlist = state.wishlist.filter(i => i._id !== action.payload)
       localStorage.setItem("wishlistItems", JSON.stringify(state.wishlist))
     })
+    .addCase("fetchWishlistItemsRequest", state => {
+      state.loading = true
+    })
+    .addCase("fetchWishlistItemsSuccess", (state, action) => {
+      state.wishlist = action.payload
+      state.loading = false
+    })
+    .addCase("fetchWishlistItemsFailure", (state, action) => {
+      state.error = action.payload
+      state.loading = false
+    })
+    .addCase("clearWishlist", state => {
+      // Clear the cart
+      console.log("clear wishlist")
+
+      state.wishlist = []
+
+      localStorage.setItem("wishlistItems", [])
+    })
 })

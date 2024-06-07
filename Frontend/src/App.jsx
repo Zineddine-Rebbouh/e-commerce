@@ -8,6 +8,7 @@ import Store from "./redux/store";
 import { LoadUser } from "./redux/actions/user";
 import Products from "./components/Home/Products";
 import Events from "./components/Home/Events";
+import EventsAdmin from './sections/Events'
 import FAQ from "./components/Home/FAQ";
 import SellerForm from "./page/SellerForm";
 import ProductDetails from "./components/Product/ProductDetails/ProductDetails";
@@ -41,16 +42,30 @@ import ShopProducts from './components/Shop/sections/Products'
 import CusomterOrders from './components/Customer/sections/Orders'
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import Requests from "./sections/Requests";
+import Refund from "./components/Customer/sections/Refund";
+import Refunds from "./components/Shop/sections/Refunds";
+import { getUserWhilistItems } from "./redux/actions/wishlist";
+import { getAllOrdersOfUser } from "./redux/actions/order";
+import { getUserCartItems } from "./redux/actions/cart";
+import Categories from "./sections/Categories";
+import Notification from "./components/Notification/Notification";
+
+// import 'swiper/swiper-bundle.min.css';
 
 function App () {
+
   useEffect( () => {
     Store.dispatch( LoadUser() )
     Store.dispatch( getAllProducts() )
+    Store.dispatch( getUserCartItems() )
+    Store.dispatch( getUserWhilistItems() )
   }, [] );
+
 
   return (
     <div>
-      <ToastContainer position="top-center" autoClose={ 5000 } />
+      <ToastContainer position="top-center" autoClose={ 2100 } />
       <Routes>
         <Route
           path="/"
@@ -112,6 +127,7 @@ function App () {
           }
         />
 
+
         <Route path="/success" element={ <Success /> } />
         <Route path="/cancel" element={ <Cancel /> } />
 
@@ -123,13 +139,17 @@ function App () {
         <Route path="/dashboard/users" element={ <Admin><User /></Admin> } />
         <Route path="/dashboard/users/:id" element={ <Admin><SingleUserPage /></Admin> } />
         <Route path="/dashboard/products" element={ <Admin><ProductsPage /></Admin> } />
+        <Route path="/dashboard/categories" element={ <Admin><Categories /></Admin> } />
         <Route path="/dashboard/revenue" element={ <Admin><Revenue /></Admin> } />
         <Route path="/dashboard/transactions" element={ <Admin><Transactions /></Admin> } />
+        <Route path="/dashboard/events" element={ <Admin><EventsAdmin /></Admin> } />
         <Route path="/dashboard/reports" element={ <Admin><Reports /></Admin> } />
+        <Route path="/dashboard/requests" element={ <Admin><Requests /></Admin> } />
         <Route path="/dashboard/shops" element={ <Admin><Shops /></Admin> } />
         <Route path="/dashboard/settings" element={ <Admin><Settings /></Admin> } />
         <Route path="/dashboard/help" element={ <Admin><Help /></Admin> } />
         <Route path="*" element={ <Layout><NotFound /></Layout> } />
+
 
 
         <Route
@@ -152,7 +172,7 @@ function App () {
             <ProtectRoute>
               <Layout>
                 <ProfileCustomer>
-                  <div className="flex justify-center items-center h-full p-4 w-full shadow-md">
+                  <div className="flex justify-center items-center h-full p-4 w-full border border-gray-200">
                     <CusomterOrders />
                   </div>
                 </ProfileCustomer>
@@ -166,7 +186,9 @@ function App () {
             <ProtectRoute>
               <Layout>
                 <ProfileCustomer>
-                  <div>Refunds</div>
+                  <div className="flex justify-center items-center h-full p-4 w-full border border-gray-200">
+                    <Refund />
+                  </div>
                 </ProfileCustomer>
               </Layout>
             </ProtectRoute>
@@ -178,7 +200,7 @@ function App () {
             <ProtectRoute>
               <Layout>
                 <ProfileCustomer>
-                  <div>Refunds</div>
+                  <div>track-order</div>
                 </ProfileCustomer>
               </Layout>
             </ProtectRoute>
@@ -190,7 +212,7 @@ function App () {
             <ProtectRoute>
               <Layout>
                 <ProfileCustomer>
-                  <div>Refunds</div>
+                  <div>Inbox</div>
                 </ProfileCustomer>
               </Layout>
             </ProtectRoute>
@@ -229,13 +251,9 @@ function App () {
           path="/shop/orders"
           element={
             <ProtectRoute>
-
               <Shop>
-                <div className="flex justify-center items-center h-full p-4 w-full shadow-md">
-                  <Orders />
-                </div>
+                <Orders />
               </Shop>
-
             </ProtectRoute>
           }
         />
@@ -243,11 +261,9 @@ function App () {
           path="/shop/products"
           element={
             <ProtectRoute>
-
               <Shop>
                 <ShopProducts />
               </Shop>
-
             </ProtectRoute>
           }
         />
@@ -255,11 +271,9 @@ function App () {
           path="/shop/refunds"
           element={
             <ProtectRoute>
-
               <Shop>
-                <div>Refunds</div>
+                <Refunds />
               </Shop>
-
             </ProtectRoute>
           }
         />
@@ -267,11 +281,9 @@ function App () {
           path="/shop/events"
           element={
             <ProtectRoute>
-
               <Shop>
                 <div>Events</div>
               </Shop>
-
             </ProtectRoute>
           }
         />

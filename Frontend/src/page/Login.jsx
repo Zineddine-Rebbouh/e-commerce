@@ -35,14 +35,14 @@ const Login = () => {
       console.log( "error" );
       toast.error( error.message, {
         position: "top-center",
-        autoClose: 2200,
+        autoClose: 1400,
       } );
     },
     onSuccess: async () => {
       console.log( "Login success" );
       toast.success( "Login success", {
         position: "top-center",
-        autoClose: 2200,
+        autoClose: 1400,
       } );
       setTimeout( () => {
         const redirectUrl = sessionStorage.getItem( "redirectUrl" );

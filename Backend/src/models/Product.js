@@ -16,19 +16,15 @@ const productSchema = new mongoose.Schema(
       ref: "Shop",
       required: true,
     },
-    // tags: {
-    //   type: [String],
-    //   required: true,
-    // },
+    Brands: {
+      type: [String],
+      required: true,
+    },
     image: {
       url: {
         type: String,
         required: true,
       },
-      // color: {
-      //   type: String,
-      //   required: true,
-      // },
     },
     description: {
       type: String,

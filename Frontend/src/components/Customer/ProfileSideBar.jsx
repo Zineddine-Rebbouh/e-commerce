@@ -1,19 +1,21 @@
-import React from "react";
-import { RxPerson } from "react-icons/rx";
-import { AiOutlineLogin, AiOutlineMessage } from "react-icons/ai";
-import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
-import {
-  MdOutlineAdminPanelSettings,
-  MdOutlineTrackChanges,
-} from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import * as apiClient from "../../api/api-Client";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
+import { clearCart } from "../../redux/actions/cart";
+import { useDispatch } from "react-redux";
+import { clearWishlist } from "../../redux/actions/wishlist";
+import * as apiClient from "../../api/api-Client";
+import { RxPerson } from "react-icons/rx";
+import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
+import { AiOutlineLogin, AiOutlineMessage } from "react-icons/ai";
+import { MdOutlineAdminPanelSettings, MdOutlineTrackChanges } from "react-icons/md";
+import { BorderRight } from "@mui/icons-material";
 
 const ProfileSideBar = ( { active, setActive } ) => {
   const user = useSelector( ( state ) => state.user );
+  const dispatch = useDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const { mutate } = useMutation( apiClient.logout, {
@@ -21,131 +23,115 @@ const ProfileSideBar = ( { active, setActive } ) => {
       console.log( "error" );
       toast.error( error.message, {
         position: "top-center",
-        autoClose: 2200,
+        autoClose: 1400,
       } );
     },
     onSuccess: async () => {
       console.log( "Logout success" );
       toast.success( "Logout success", {
         position: "top-center",
-        autoClose: 2200,
+        autoClose: 1400,
       } );
       setTimeout( () => {
         navigate( "/" );
         window.location.reload();
+
       }, 2000 );
     },
   } );
 
   const handleLogOut = () => {
+    dispatch( clearCart() );
+    dispatch( clearWishlist() );
     mutate();
+  };
+
+  const activeLinkStyles = {
+    color: "red", // Change to your desired color
+    backgroundColor: "#f5f5f5",
+    padding: "10px 0",
+    BorderRight: "4px solid red", // Change to your desired border color
   };
 
   return (
     <div className="w-full h-full flex flex-col gap-3 justify-center bg-white shadow-sm rounded-[10px] p-4 pt-8 border border-gray-100">
       <Link to="/profile">
         <div
-          className="flex items-center cursor-pointer w-full mb-8"
-          onClick={ () => setActive( 1 ) }
+          className={ `flex items-center cursor-pointer w-full mb-8 ${ location.pathname === "/profile" ? "active-link" : ""
+            }` }
+          style={ location.pathname === "/profile" ? activeLinkStyles : {} }
+
         >
-          <RxPerson size={ 20 } color={ active === 1 ? "red" : "" } />
-          <span
-            className={ `pl-3 ${ active === 1 ? "text-[red]" : "" } hidden md:block` }
-          >
-            Profile
-          </span>
+          <RxPerson size={ 20 } />
+          <span className={ `pl-3 hidden md:block` }>Profile</span>
         </div>
       </Link>
       <Link to="/profile/orders">
         <div
-          className="flex items-center cursor-pointer w-full mb-8"
-          onClick={ () => setActive( 2 ) }
+          className={ `flex items-center cursor-pointer w-full mb-8 ${ location.pathname === "/profile/orders" ? "active-link" : ""
+            }` }
+          style={ location.pathname === "/profile/orders" ? activeLinkStyles : {} }
+
         >
-          <HiOutlineShoppingBag
-            size={ 20 }
-            color={ active === 2 ? "red" : "" }
-          />
-          <span
-            className={ `pl-3 ${ active === 2 ? "text-[red]" : "" } hidden md:block` }
-          >
-            Orders
-          </span>
+          <HiOutlineShoppingBag size={ 20 } />
+          <span className={ `pl-3 hidden md:block` }>Orders</span>
         </div>
       </Link>
       <Link to="/profile/refunds">
         <div
-          className="flex items-center cursor-pointer w-full mb-8"
-          onClick={ () => setActive( 3 ) }
+          className={ `flex items-center cursor-pointer w-full mb-8 ${ location.pathname === "/profile/refunds" ? "active-link" : ""
+            }` }
+          style={ location.pathname === "/profile/refunds" ? activeLinkStyles : {} }
+
         >
-          <HiOutlineReceiptRefund
-            size={ 20 }
-            color={ active === 3 ? "red" : "" }
-          />
-          <span
-            className={ `pl-3 ${ active === 3 ? "text-[red]" : "" } hidden md:block` }
-          >
-            Refunds
-          </span>
+          <HiOutlineReceiptRefund size={ 20 } />
+          <span className={ `pl-3 hidden md:block` }>Refunds</span>
         </div>
       </Link>
-
-      <Link to="/profile/messages">
+      {/* <Link to="/profile/messages">
         <div
-          className="flex items-center cursor-pointer w-full mb-8"
-          onClick={ () => setActive( 4 ) }
-        >
-          <AiOutlineMessage size={ 20 } color={ active === 4 ? "red" : "" } />
-          <span
-            className={ `pl-3 ${ active === 4 ? "text-[red]" : "" } hidden md:block` }
-          >
-            Inbox
-          </span>
-        </div>
-      </Link>
+          className={ `flex items-center cursor-pointer w-full mb-8 ${ location.pathname === "/profile/messages" ? "active-link" : ""
+            }` }
+          style={ location.pathname === "/profile/messages" ? activeLinkStyles : {} }
 
-      <Link to="/profile/track-order">
+        >
+          <AiOutlineMessage size={ 20 } />
+          <span className={ `pl-3 hidden md:block` }>Inbox</span>
+        </div>
+      </Link> */}
+      {/* <Link to="/profile/track-order">
         <div
-          className="flex items-center cursor-pointer w-full mb-8"
-          onClick={ () => setActive( 5 ) }
-        >
-          <MdOutlineTrackChanges size={ 20 } color={ active === 5 ? "red" : "" } />
-          <span
-            className={ `pl-3 ${ active === 5 ? "text-[red]" : "" } hidden md:block` }
-          >
-            Track Order
-          </span>
-        </div>
-      </Link>
+          className={ `flex items-center cursor-pointer w-full mb-8 ${ location.pathname === "/profile/track-order" ? "active-link" : ""
+            }` }
+          style={ location.pathname === "/profile/track-order" ? activeLinkStyles : {} }
 
+        >
+          <MdOutlineTrackChanges size={ 20 } />
+          <span className={ `pl-3 hidden md:block` }>Track Order</span>
+        </div>
+      </Link> */}
       { user && user?.role === "Admin" && (
         <Link to="/profile/admin-dashboard">
           <div
-            className="flex items-center cursor-pointer w-full mb-8"
-            onClick={ () => setActive( 8 ) }
+            className={ `flex items-center cursor-pointer w-full mb-8 ${ location.pathname === "/profile/admin-dashboard"
+              ? "active-link"
+              : ""
+              }` }
+            style={ location.pathname === "/profile//admin-dashboard" ? activeLinkStyles : {} }
+
           >
-            <MdOutlineAdminPanelSettings
-              size={ 20 }
-              color={ active === 7 ? "red" : "" }
-            />
-            <span
-              className={ `pl-3 ${ active === 8 ? "text-[red]" : ""
-                } hidden md:block` }
-            >
-              Admin Dashboard
-            </span>
+            <MdOutlineAdminPanelSettings size={ 20 } />
+            <span className={ `pl-3 hidden md:block` }>Admin Dashboard</span>
           </div>
         </Link>
       ) }
       <button
         onClick={ handleLogOut }
-        className="single_item flex items-center cursor-pointer w-full mb-8"
+        className={ `single_item flex items-center cursor-pointer w-full mb-8 ${ active === 8 ? "active-link" : ""
+          }` }
       >
-        <AiOutlineLogin size={ 20 } color={ active === 8 ? "red" : "" } />
-        <span
-          className={ `pl-3 ${ active === 8 ? "text-[red]" : "" } hidden md:block` }
-        >
-          Log out
-        </span>
+        <AiOutlineLogin size={ 20 } />
+        <span className={ `pl-3 hidden md:block` }>Log out</span>
       </button>
     </div>
   );

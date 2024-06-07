@@ -5,9 +5,9 @@ import * as apiClient from "../../api/api-Client";
 import { useQuery } from "react-query";
 
 const BestDeals = () => {
-    const { data: productData } = useQuery( "products", apiClient.getProducts );
+    const { data: productData } = useQuery( "products", apiClient.getBestProducts );
 
-
+    console.log( productData );
     const [ firstFive, setData ] = useState( [] );
     useEffect( () => {
         const products = productData?.sort( ( a, b ) => b.total_sell - a.total_sell && b.price - a.price );

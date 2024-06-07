@@ -12,12 +12,12 @@ const Avatar = ( { src, heightImage, widthImage } ) => {
         return <img
             src={ src }
             alt="Avatar"
-            className=' rounded-full border-[1px]'
-            height={ heightAvatar }
-            width={ widthAvatar }
+            className=' rounded-full border-[1px] border-gray-200 object-contain'
+            height={ heightAvatar ? heightAvatar : 10 }
+            width={ widthAvatar ? widthAvatar : 10 }
         />;
     }
-    return <FaUserCircle size={ 32 } />;
+    return <FaUserCircle size={ 32 } color='white' />;
 };
 
 export default Avatar;

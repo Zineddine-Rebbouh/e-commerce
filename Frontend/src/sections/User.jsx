@@ -29,6 +29,7 @@ const User = () => {
 
     const handleDeleteUser = async id => {
 
+        setUsers( users.filter( user => user._id !== id ) );
         await apiClient.removeUser( id );
 
         console.log( "User deleted" );
@@ -49,7 +50,6 @@ const User = () => {
                         <td className="p-5 font-semibold">Email</td>
                         <td className="p-5 font-semibold">Created At</td>
                         <td className="p-5 font-semibold">Role</td>
-                        <td className="p-5 font-semibold">Status</td>
                         <td className="p-5 font-semibold">Action</td>
                     </tr>
                 </thead>
@@ -71,10 +71,10 @@ const User = () => {
                             <td>{ user.email }</td>
                             <td>{ user.createdAt?.toString().slice( 4, 16 ) }</td>
                             <td>{ user.role }</td>
-                            <td>
+                            {/* <td>
                                 <span className={ "rounded-lg p-1 text-sm text-white bg-green-500" }>
                                     { user.isActive ? "confirmed" : "pending" }                                </span>
-                            </td>
+                            </td> */}
                             <td>
                                 <div className="flex gap-1 items-center">
                                     <Link to={ `/dashboard/users/${ user._id }` }>

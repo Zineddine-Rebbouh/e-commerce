@@ -11,12 +11,12 @@ const ProfileCustomer = ( { children } ) => {
   const dispatch = useDispatch();
   const { user, isLoading, isAuthenticated } = useSelector( ( state ) => state.user );
 
-  useEffect( () => {
-    if ( user && user._id )
-    {
-      dispatch( getAllOrdersOfUser( user._id ) );
-    }
-  }, [ dispatch, user?._id ] );
+  // useEffect( () => {
+  //   if ( user && user._id )
+  //   {
+  //     dispatch( getAllOrdersOfUser( user._id ) );
+  //   }
+  // }, [ dispatch, user?._id ] );
 
 
 

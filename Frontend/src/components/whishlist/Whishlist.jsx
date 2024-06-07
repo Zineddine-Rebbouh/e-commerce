@@ -10,12 +10,14 @@ const Wishlist = () => {
 
 
     const { wishlist } = useSelector( ( state ) => state.wishlist );
+    const { user } = useSelector( ( state ) => state.user );
     const dispatch = useDispatch();
 
     const WhishlistCounter = wishlist.length
     const removeFromWishlistHandler = ( data ) => {
         console.log( data );
-        dispatch( removeFromWishlist( data._id ) );
+        const userId = user ? user._id : null; // Retrieve userId from user state
+        dispatch( removeFromWishlist( data._id, userId ) );
     };
 
     return (

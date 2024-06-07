@@ -20,6 +20,11 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    screenshots: [
+      {
+        type: String, // Assuming you store URLs of the screenshots
+      },
+    ],
   },
   {
     timestamps: true,

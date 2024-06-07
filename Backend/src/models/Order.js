@@ -7,10 +7,6 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    shopId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Shop",
-    },
     shippingAddress: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ShippingAdresse",
@@ -39,8 +35,17 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["Processing", "Shipped", "Delivered"],
-      default: "Processing",
+      enum: [
+        "Pending",
+        "Processing",
+        "Shipped",
+        "Delivered",
+        "Cancelled",
+        "On Hold",
+        "Refunded",
+        "Returned",
+      ],
+      default: "Pending",
     },
     deliverDate: {
       type: Date,

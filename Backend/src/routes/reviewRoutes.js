@@ -8,8 +8,9 @@ const {
   deleteReview,
   updateReview,
 } = require("../controllers/reviewController")
+const upload = require("../utils/multer")
 
-router.post("/:id", validateToken, createReview)
+router.post("/:id", upload.array("screenshots", 5), validateToken, createReview)
 
 router.get("/:id", validateToken, getReviews)
 

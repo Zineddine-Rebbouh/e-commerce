@@ -1,22 +1,51 @@
 const Category = require("../models/Category")
 const uploadImage = require("../utils/uploadImage")
 
-const addCategory = async (req, res) => {
+const addOrUpdateCategory = async (req, res) => {
   try {
-    const alreadyExists = await Category.findOne({ name: req.body.name })
+    const { id, name, description } = req.body
+    let imageUrl
+
+    if (req.file) {
+      imageUrl = await uploadImage(req.file)
+    } else {
+      imageUrl = req.body.image
+    }
+
+    // If id is provided, update the existing category
+    if (id) {
+      const category = await Category.findById(id)
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" })
+      }
+
+      category.name = name || category.name
+      category.description = description || category.description
+      if (imageUrl) {
+        category.image = imageUrl
+      }
+
+      await category.save()
+      console.log("Category Updated")
+      return res.status(200).json({ message: "Category Updated", category })
+    }
+
+    // Check if category with the same name already exists
+    const alreadyExists = await Category.findOne({ name })
     if (alreadyExists) {
       return res.status(400).json({ message: "Category Already Exists" })
     }
 
+    // Create a new category
     const category = new Category({
-      name: req.body.name,
-      image: await uploadImage(req.file),
-      description: req.body.description,
+      name,
+      image: imageUrl,
+      description,
     })
 
     await category.save()
     console.log("Category Added")
-    return res.status(200).json({ message: "Category Added" })
+    return res.status(200).json({ message: "Category Added", category })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
@@ -83,7 +112,7 @@ const updateCategory = async (req, res) => {
 }
 
 module.exports = {
-  addCategory,
+  addOrUpdateCategory,
   getCategories,
   removeCategory,
   getCategory,

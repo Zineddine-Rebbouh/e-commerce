@@ -7,7 +7,6 @@ const SetQuantity = ( {
     DecreaseQuantity,
 } ) => {
 
-    console.log( cartProduct );
 
 
     return (

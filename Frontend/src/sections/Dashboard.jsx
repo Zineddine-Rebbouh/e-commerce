@@ -6,12 +6,13 @@ import Rightbar from '../components/Rightbar/Rightbar'
 
 const Dashboard = () => {
     return (
-        <div className='grid grid-cols-4 gap-5 mt-5 min-h-screen'>
-            <div className='grid col-span-3 gap-5'>
+        <div className='grid grid-cols-5 gap-5 mt-5 min-h-screen'>
+            <div className='grid col-span-4 gap-5'>
                 <div className='flex gap-5 justify-between'>
-                    <Card />
-                    <Card />
-                    <Card />
+                    <Card type={ 'Total Customers' } amount={ '10' } parcentage={ 60 } />
+                    <Card type={ 'Total Sellers' } amount={ '10' } parcentage={ 60 } />
+                    <Card type={ 'Total Orders' } amount={ '10' } parcentage={ 60 } />
+                    <Card type={ 'Total Requests' } amount={ '10' } parcentage={ 60 } />
                 </div>
                 <Transactions />
                 <Chart />

@@ -1,26 +1,36 @@
 const mongoose = require("mongoose")
 
-const reportSchema = new mongoose.Schema({
-  reportedUserId: {
-    type: String,
-    required: true,
+const reportsSchema = new mongoose.Schema(
+  {
+    reportedUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    reporterUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    reason: {
+      type: String,
+      required: true,
+    },
+    screenshots: [
+      {
+        type: String, // Assuming you store URLs of the screenshots
+      },
+    ],
+    status: {
+      type: String,
+      enum: ["Pending", "Resolved"],
+      required: true,
+      default: "Pending",
+    },
   },
-  reporterUserId: {
-    type: String,
-    required: true,
-  },
-  reason: {
-    type: String,
-    required: true,
-  },
-  status: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-})
+  {
+    timestamps: true,
+  }
+)
 
-module.exports = mongoose.model("Report", reportSchema)
+module.exports = mongoose.model("Reports", reportsSchema)

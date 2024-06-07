@@ -12,10 +12,10 @@ const Favourites = () => {
             } }
         >
             <div className='text-3xl'>
-                <CiHeart size={ 32 } />
+                <CiHeart size={ 32 } color='white' fontWeight={ 700 } />
             </div>
-            <span className={ `${ FavouritesCounter === 0 ? "" : "bg-[#222]" }  absolute
-                top-[-10px] right-[-10px] text-white h-6 w-6 rounded-full flex items-center justify-center text-sm ` }>
+            <span className={ `${ FavouritesCounter === 0 ? "" : "bg-[#fff]" }  absolute
+                top-[-10px] right-[-10px] text-black h-6 w-6 rounded-full flex items-center justify-center text-sm ` }>
                 { FavouritesCounter === 0 ? '' : FavouritesCounter }
             </span>
 

@@ -130,25 +130,25 @@ const OrderDetails = () => {
 
             <div className="border-t w-full text-right">
                 <h4 className="pt-3 text-[20px] font-[600]">
-                    Total Price: ${ order?.totalPrice }
+                    Total Price: { order?.totalPrice } DZD
                 </h4>
             </div>
             <br />
             <br />
             <div className="w-full 800px:flex items-center">
                 <div className="w-full 800px:w-[60%]">
-                    <h4 className="pt-3 text-[20px] font-[600]">Shipping Address:</h4>
+                    <h4 className="pt-3 text-[25px] font-[600]">Shipping Address:</h4>
                     <h4 className="pt-3 text-[20px]">
                         {/* { data?.shippingAddress.address1 +
                             " " +
                             data?.shippingAddress.address2 } */}
                     </h4>
-                    <h4 className=" text-[20px]">{ order?.shippingAddress?.postalCode } , { order?.shippingAddress?.city } , { order?.shippingAddress?.street } , { order?.shippingAddress?.country }</h4>
+                    <h4 className=" text-[20px] my-5">{ order?.shippingAddress?.postalCode } , { order?.shippingAddress?.city } , { order?.shippingAddress?.street } </h4>
                     <h4 className=" text-[20px]"></h4>
                     <h4 className=" text-[20px]">{ order?.userId?.email }</h4>
                 </div>
                 <div className="w-full 800px:w-[40%]">
-                    <h4 className="pt-3 text-[20px] font-[600]">Payment Info:</h4>
+                    <h4 className="pt-3 text-[25px] font-[600]">Payment Info:</h4>
                     <h4 className="pt-3 text-[20px]">
                         Status:{ " " }
                         { order?.paymentResult?.status ? order?.paymentResult?.status : "Not Paid" }
@@ -157,7 +157,7 @@ const OrderDetails = () => {
             </div>
             <br />
             <br />
-            <h4 className="pt-3 text-[20px] font-[600]">Order Status:</h4>
+            <h4 className="pt-3 text-[25px] font-[600]">Order Status:</h4>
 
             <h4 className="pt-3 text-[20px]">
                 { order?.status === "Processing refund" ? "Refund Success" : order?.status }

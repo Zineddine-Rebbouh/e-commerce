@@ -4,45 +4,91 @@ const Review = require("../models/Review.js")
 const User = require("../models/User.js")
 const uploadImage = require("../utils/uploadImage")
 const { validationResult } = require("express-validator")
+const Discount = require("../models/Discount.js")
 
-const AddProduct = async (req, res) => {
+const addOrEditProduct = async (req, res) => {
   try {
-    console.log("heeloo")
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
     }
-    const user = await User.findById(req.body.userId)
-    console.log(user)
 
-    const category = await Category.find({ name: req.body.category })
-    console.log(category)
+    const user = await User.findById(req.body.userId)
+    if (!user) {
+      return res.status(400).json({ message: "User not found" })
+    }
+
+    const category = await Category.findById(req.body.category)
     if (!category) {
       return res.status(400).json({ message: "Category Not Found" })
     }
 
-    const product = new Product({
-      name: req.body.name,
-      categoryId: category[0]._id,
-      shopId: user.shopId,
-      description: req.body.description,
-      price: req.body.price,
-      available_quantity: req.body.quantity,
-    })
+    const image = req.file ? { url: await uploadImage(req.file) } : undefined
 
-    const image = {
-      url: await uploadImage(req.file),
-      // color: req.body.colors,
+    let product
+    if (req.body.status == "edit") {
+      // Update existing product
+      product = await Product.findById(req.body.productId)
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" })
+      }
+
+      product.name = req.body.name
+      product.categoryId = category._id
+      product.shopId = user.shopId
+      product.description = req.body.description
+      product.price = req.body.price
+      product.available_quantity = req.body.quantity
+      if (image) {
+        product.image = image
+      }
+      console.log(req.body.discount)
+
+      // Check if discount option is provided
+      if (req.body.discount != 0) {
+        const discount = new Discount({
+          discount_rate: req.body.discount,
+          start_date: req.body.start_date,
+          end_date: req.body.end_date,
+        })
+        product.isHavingDiscount = true
+
+        await discount.save()
+        product.discountId = discount._id
+      }
+
+      await product.save()
+      console.log("Product Updated")
+      return res.status(200).json({ message: "Product Updated" })
+    } else {
+      console.log(req.body)
+      // Add new product
+      product = new Product({
+        name: req.body.name,
+        categoryId: category._id,
+        shopId: user.shopId,
+        description: req.body.description,
+        price: req.body.price,
+        available_quantity: req.body.quantity,
+        image,
+      })
+
+      // Check if discount option is provided
+      if (req.body.discount != 0) {
+        const discount = new Discount({
+          discount_rate: req.body.discount,
+          start_date: req.body.start_date,
+          end_date: req.body.end_date,
+        })
+        product.isHavingDiscount = true
+        await discount.save()
+        product.discountId = discount._id
+      }
+
+      await product.save()
+      console.log("Product Added")
+      return res.status(200).json({ message: "Product Added" })
     }
-
-    product.image = image
-
-    // const tags = req.body.tags.split(",")
-    // product.tags = tags
-
-    await product.save()
-    console.log("Product Added")
-    return res.status(200).json({ message: "Product Added" })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
@@ -50,9 +96,70 @@ const AddProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find()
+    const products = await Product.find({})
       .populate("categoryId", "name")
       .populate("shopId", "name avatar")
+    return res.status(200).json(products)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+const getBestProducts = async (req, res) => {
+  try {
+    // Find all products that have a discount
+    const products = await Product.find({ discountId: { $exists: true } })
+      .populate("categoryId", "name")
+      .populate("shopId", "name avatar")
+      .exec()
+
+    // Calculate the discounted price and add it as a new field
+    const updatedProducts = await Promise.all(
+      products.map(async product => {
+        let discountedPrice = product.price
+
+        if (product.discountId) {
+          const discount = await Discount.findById(product.discountId)
+
+          // Ensure discount is found and discount_rate is valid
+          if (discount && discount.discount_rate) {
+            // Calculate the discounted price
+            discountedPrice =
+              product.price - (product.price * discount.discount_rate) / 100
+          } else {
+            // Skip the product if no valid discount is found
+            return null
+          }
+        } else {
+          // Skip the product if no discountId is present
+          return null
+        }
+
+        // Return the product with the new field for discounted price
+        return {
+          ...product.toObject(), // Convert Mongoose document to plain JavaScript object
+          discountedPrice, // Add new field for the discounted price
+        }
+      })
+    )
+
+    // Filter out any null values resulting from products without valid discounts
+    const filteredProducts = updatedProducts.filter(product => product !== null)
+
+    return res.status(200).json(filteredProducts)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+const getFeatureProducts = async (req, res) => {
+  console.log("feature products here")
+  try {
+    const products = await Product.find({ discountId: { $exists: false } })
+      .populate("categoryId", "name")
+      .populate("shopId", "name avatar")
+      .sort({ createdAt: -1 })
+
     return res.status(200).json(products)
   } catch (error) {
     res.status(500).json({ message: error.message })
@@ -62,21 +169,26 @@ const getProducts = async (req, res) => {
 const getProductsByCategory = async (req, res) => {
   try {
     console.log("category products here")
-    const categoryId = req.params.categoryId
     const productId = req.params.productId
-    console.log(categoryId, productId)
-    const products = await Product.find({
-      categoryId: categoryId,
-      _id: { $ne: productId }, // Exclude the current product
+    console.log(productId)
+
+    const product = await Product.findById(productId)
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" })
+    }
+
+    const relatedProducts = await Product.find({
+      categoryId: product.categoryId,
+      _id: { $ne: product._id },
     })
       .populate("categoryId", "name")
       .populate("shopId", "name avatar")
       .sort({ createdAt: -1 })
       .exec()
 
-    console.log(products)
+    console.log(relatedProducts)
 
-    return res.status(200).json(products)
+    return res.status(200).json(relatedProducts)
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
@@ -123,10 +235,12 @@ const updateProduct = async (req, res) => {
 }
 
 module.exports = {
-  AddProduct,
+  addOrEditProduct,
   getProducts,
   removeProduct,
   getProduct,
   updateProduct,
   getProductsByCategory,
+  getBestProducts,
+  getFeatureProducts,
 }

@@ -61,7 +61,7 @@ const Transactions = () => {
                                 </span>
                             </td>
                             <td>{ order.createdAt }</td>
-                            <td>{ order.totalPrice }.00 DZD</td>
+                            <td>{ order.totalPrice } DZD</td>
                         </tr>
                     ) ) }
                 </tbody>

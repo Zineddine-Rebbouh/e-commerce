@@ -1,103 +1,136 @@
-import React, { useState } from 'react'
-import { DataGrid } from '@mui/x-data-grid';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import AddProduct from '../../Forms/AddProduct';
-import * as apiClient from '../../../api/api-Client'
+import React, { useState, useEffect } from 'react';
+import { Table, Input, Button } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
-
+import * as apiClient from '../../../api/api-Client';
+import AddProduct from '../../Forms/AddProduct';
 
 const Products = () => {
-    const [ showAddForm, setShowAddForm ] = useState( false ); // State variable to control the visibility of the add form
-    const { shop, isLoading } = useSelector( ( state ) => state.shop );
+    const navigate = useNavigate();
+    const [ searchTerm, setSearchTerm ] = useState( '' );
+    const [ showAddForm, setShowAddForm ] = useState( false );
+    const { shop } = useSelector( ( state ) => state.shop );
+    const [ products, setProducts ] = useState( [] );
+    const [ productToEdit, setProductToEdit ] = useState( null );
 
+    const handleHideForm = () => {
+        setShowAddForm( false );
+        setProductToEdit( null );
+    };
 
+    const handleAddProduct = () => {
+        setProductToEdit( null );
+        setShowAddForm( true );
+    };
+
+    const { data: productsData } = useQuery( 'products', () => apiClient.getProdutctsByShopId( shop._id ) );
+
+    useEffect( () => {
+        if ( productsData )
+        {
+            setProducts( productsData );
+        }
+    }, [ productsData ] );
+
+    const handleSearch = ( e ) => {
+        setSearchTerm( e.target.value );
+    };
+
+    const deleteProduct = async ( id ) => {
+        try
+        {
+            await apiClient.deleteProduct( id );
+            setProducts( products.filter( ( product ) => product._id !== id ) );
+        } catch ( error )
+        {
+            console.error( 'Error deleting product:', error );
+        }
+    };
+
+    const handleEdit = ( product ) => {
+        setProductToEdit( product );
+        setShowAddForm( true );
+    };
 
     const columns = [
-        { field: "id", headerName: "ID", width: 100 },
         {
-            field: "image",
-            headerName: "Image",
-            width: 100,
-            renderCell: ( params ) => {
-                console.log( params ); // Log the params object
-                return (
-                    <img src={ params.row.image.props.src } alt={ params.row.name } className='w-14 h-14 object-contain' />
-                );
-            }
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            sorter: ( a, b ) => a.name.localeCompare( b.name ),
         },
-        { field: "name", headerName: "Name", width: 250 },
-        { field: "description", headerName: "Description", width: 450 },
-        { field: "price", headerName: "Price", width: 120 },
-        { field: "category", headerName: "Category", width: 150 },
-        { field: "stock", headerName: "Stock", width: 100 },
-        { field: "discount", headerName: "Discount", width: 100 },
         {
-            field: "actions",
-            headerName: "Actions",
-            width: 250,
-            renderCell: ( params ) => (
-                <div className='flex items-center gap-2 h-full'>
-                    <FaEdit
-                        size={ 20 }
-                        className="text-blue-500 cursor-pointer mr-2"
-                    />
-                    <FaTrash
-                        size={ 20 }
-                        className="text-red-500 cursor-pointer"
-                    />
-                </div>
+            title: 'Price ( DZD)',
+            dataIndex: 'price',
+            key: 'price',
+            sorter: ( a, b ) => Number( a.price.slice( 1 ) ) - Number( b.price.slice( 1 ) ),
+        },
+        {
+            title: 'Image',
+            dataIndex: [ 'image', 'url' ],
+            key: 'image',
+            render: ( text ) => <img src={ text } alt="Product" style={ { width: '2.5rem', height: '2.5rem' } } />,
+        },
+        {
+            title: 'Category',
+            dataIndex: [ 'categoryId', 'name' ],
+            key: 'categoryName',
+            sorter: ( a, b ) => a.categoryId.name.localeCompare( b.categoryId.name ),
+        },
+        {
+            title: 'Stock',
+            dataIndex: 'available_quantity',
+            key: 'available_quantity',
+            sorter: ( a, b ) => a.stock - b.stock,
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+            ellipsis: {
+                showTitle: false,
+            },
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: ( text, record ) => (
+                <span className='space-x-2'>
+                    <Button icon={ <EditOutlined /> } onClick={ () => handleEdit( record ) } />
+                    <Button icon={ <DeleteOutlined /> } onClick={ () => deleteProduct( record._id ) } />
+                </span>
             ),
         },
     ];
 
-
-    const handleHideForm = () => {
-        setShowAddForm( false );
-    };
-
-    const handleAddProduct = () => {
-        setShowAddForm( true );
-    };
-
-    const { data: products } = useQuery( 'products', apiClient.getProdutctsByShopId( shop._id ) )
-    console.log( products );
-    const rows = products?.map( ( product, index ) => ( {
-        id: product._id,
-        image: <img src={ product.image.url } alt={ product.name } className="w-10 h-10 object-cover rounded-full" />,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        category: product.categoryId.name,
-        stock: product.available_quantity,
-        discount: product.discount ? product.discount : 'N/A',
-    } ) );
+    const filteredProducts = products
+        .filter( ( product ) =>
+            product.name.toLowerCase().includes( searchTerm.toLowerCase() )
+        )
+        .map( ( product ) => ( { ...product, key: product._id } ) );
 
     return (
-        <div style={ { height: 800, width: '100%', overflow: 'hidden' } } className="p-4">
-            <div className='flex items-center justify-end py-5'>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={ handleAddProduct }>Add Product</button>
-            </div>
+        <div className='p-4' style={ { boxShadow: "2px 4px 16px #0000001c" } }>
+            <h1 className='font-medium text-2xl mb-4'>Product Management</h1>
             { showAddForm && (
-                <AddProduct onClose={ handleHideForm } />
+                <AddProduct onClose={ handleHideForm } product={ productToEdit } />
             ) }
-
-            <DataGrid
-                rows={ rows }
-                columns={ columns }
-                getRowSpacing={ ( row ) => 10 }
-                getRowHeight={ ( row ) => 70 }
-                initialState={ {
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 5 },
-                    },
-                } }
-                pageSizeOptions={ [ 5, 10 ] }
-                checkboxSelection
-                disableSelectionOnClick
+            <div className='flex justify-between ' style={ { marginBottom: '1rem' } }>
+                <Input
+                    placeholder="Search by product name"
+                    value={ searchTerm }
+                    onChange={ handleSearch }
+                    style={ { width: 500, marginRight: '1rem' } }
+                />
+                <Button onClick={ handleAddProduct }>Add Product</Button>
+            </div>
+            <Table columns={ columns } dataSource={ filteredProducts }
+                rowKey={ ( record ) => record._id }
             />
-        </div >
-    )
-}
+        </div>
+    );
+};
 
-export default Products
+export default Products;

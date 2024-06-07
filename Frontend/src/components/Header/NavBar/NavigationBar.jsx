@@ -21,7 +21,7 @@ const NavigationBar = () => {
             <div className='py-3 border-b-1 '>
                 <Container>
                     <div className='flex items-center  gap-3 md-g ap-0'>
-                        <a href="/" className='text-white font-bold text-3xl'>.Logo</a>
+                        <a href="/" className='text-white font-bold text-3xl'>TechHub</a>
                         <div className='hidden md:flex flex-grow '>
                             <SearchBar />
                         </div>
@@ -55,7 +55,7 @@ const NavigationBar = () => {
                                 </div>
                             ) : (
                                 <div className='flex gap-4 items-center '>
-                                    <FaUserAlt size={ 24 } color='#ef4a23' />
+                                    <FaUserAlt size={ 24 } color='white' />
                                     <div>
                                         <span className='font-semibold text-white text-md'>Account</span>
                                         <div className='flex gap-2'>

@@ -10,6 +10,8 @@ import {
     MdOutlineSettings,
     MdHelpCenter,
     MdLogout,
+    MdEvent,
+    MdCategory,
 } from "react-icons/md";
 
 import { Link } from 'react-router-dom'
@@ -35,14 +37,14 @@ const Sidebar = ( { onSectionClick, activeSection } ) => {
             console.log( "error" );
             toast.error( error.message, {
                 position: "top-center",
-                autoClose: 2200,
+                autoClose: 1400,
             } );
         },
         onSuccess: async () => {
             console.log( "Logout success" );
             toast.success( "Logout success", {
                 position: "top-center",
-                autoClose: 2200,
+                autoClose: 1400,
             } );
             setTimeout( () => {
                 navigate( "/" );
@@ -71,6 +73,11 @@ const Sidebar = ( { onSectionClick, activeSection } ) => {
                     icon: <MdSupervisedUserCircle />,
                 },
                 {
+                    title: "Categories",
+                    path: "/dashboard/categories",
+                    icon: <MdCategory />,
+                },
+                {
                     title: "Products",
                     path: "/dashboard/products",
                     icon: <MdShoppingBag />,
@@ -91,9 +98,19 @@ const Sidebar = ( { onSectionClick, activeSection } ) => {
                     icon: <MdWork />,
                 },
                 {
+                    title: "Events",
+                    path: "/dashboard/events",
+                    icon: <MdEvent />, // Use MdEvent icon for "Events"
+                },
+                {
                     title: "Reports",
                     path: "/dashboard/reports",
                     icon: <MdAnalytics />,
+                },
+                {
+                    title: "Requests",
+                    path: "/dashboard/requests",
+                    icon: <MdPeople />,
                 },
                 {
                     title: "Shops",
@@ -127,12 +144,12 @@ const Sidebar = ( { onSectionClick, activeSection } ) => {
 
 
     return (
-        <div className='flex flex-col sticky top-[40px]'>
-            <ToastContainer position="top-center" autoClose={ 5000 } />
+        <div className='flex flex-col sticky top-[40px] h-screen'>
+            <ToastContainer position="top-center" autoClose={ 1400 } />
             <div className='flex items-center gap-5 mt-5 mb-7'>
                 <img
                     className='object-cover rounded-full'
-                    src={ photoProfile }
+                    src={ user?.avatar ? user.avatar : photoProfile }
                     alt=""
                     width="50"
                     height="50"

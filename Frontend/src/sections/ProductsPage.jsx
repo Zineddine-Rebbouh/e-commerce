@@ -4,16 +4,33 @@ import Pagination from "../components/pagination";
 import * as apiClient from '../api/api-Client'
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Loader } from "../components/Loader/Loader";
+import { useQuery } from "react-query";
+
 
 
 
 const ProductsPage = () => {
+    const [ productsData, setProductsData ] = useState( [] );
     const { products, isLoading } = useSelector( state => state.products );
-    const data = products.map( ( product ) => { return { ...product, createdAt: new Date( product.createdAt ).toLocaleDateString() } } );
+    // const { data: categories } = useQuery( "categories", apiClient.getCateogries );
+    // console.log( categories )
+    useEffect( () => {
+        if ( products )
+        {
+            const data = products.map( ( product ) => { return { ...product, createdAt: new Date( product.createdAt ).toLocaleDateString() } } );
+            setProductsData( data );
+        }
+    }, [ productsData ] );
 
 
+    const handleDeleteProduct = async id => {
+        e.preventDefault(); //3
+        setProductsData( productsData.filter( product => product.id !== id ) );
+        await apiClient.removeProduct( id );
 
-
+        console.log( "Product deleted" );
+    }
 
     console.log( products );
 
@@ -37,8 +54,8 @@ const ProductsPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    { data.map( ( product ) => (
-                        <tr key={ product.id }>
+                    { products.map( ( product ) => (
+                        <tr key={ product._id }>
                             <td className="py-2">
                                 <div className={ "flex items-center gap-2" }>
                                     <img
@@ -58,19 +75,19 @@ const ProductsPage = () => {
                                     { product.description }
                                 </span>
                             </td>
-                            <td className="p-5">${ product.price }</td>
+                            <td className="p-5">{ product.price } DZD</td>
                             <td className="p-5">{ product.createdAt?.toString().slice( 4, 16 ) }</td>
                             <td className="p-5">{ product.available_quantity }</td>
                             <td className="p-5">
                                 <div className={ "flex gap-2" }>
-                                    <Link to={ `/dashboard/products/${ product.id }` }>
+                                    <Link to={ `/dashboard/products/${ product._id }` }>
                                         <button className={ "border-none py-1 px-2 rounded-md text-white bg-green-400 cursor-pointer" }>
                                             View
                                         </button>
                                     </Link>
                                     <form >
-                                        <input type="hidden" name="id" value={ product.id } />
-                                        <button className={ "border-none py-1 px-2 rounded-md text-white bg-red-400 cursor-pointer" }>
+                                        <input type="hidden" name="id" value={ product._id } />
+                                        <button onClick={ () => handleDeleteProduct( product._id ) } className={ "border-none py-1 px-2 rounded-md text-white bg-red-400 cursor-pointer" }>
                                             Delete
                                         </button>
                                     </form>

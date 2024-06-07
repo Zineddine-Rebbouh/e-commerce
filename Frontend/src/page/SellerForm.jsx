@@ -15,20 +15,20 @@ const SellerForm = () => {
     const navigate = useNavigate()
     const { user } = useSelector( ( state ) => state.user );
 
-    const { mutate } = useMutation( apiClient.createShop, {
+    const { mutate } = useMutation( apiClient.createRequestShop, {
         onError: ( error ) => {
             console.log( "error" );
             toast.error( error.message, {
                 position: "top-center",
-                autoClose: 2200,
+                autoClose: 1400,
 
             } );
         }
         , onSuccess: async () => {
             console.log( 'Login success' );
-            toast.success( 'Shop successfully created', {
+            toast.success( 'Request successfully Sent', {
                 position: "top-center",
-                autoClose: 2200,
+                autoClose: 1400,
 
             } );
             setTimeout( () => {
@@ -50,7 +50,6 @@ const SellerForm = () => {
         formData.append( "address", data.address );
         formData.append( "zipCode", data.zipcode );
         formData.append( "avatar", avatar );
-        formData.append( "userId", user._id );
 
 
         mutate( formData );
@@ -76,7 +75,7 @@ const SellerForm = () => {
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <ToastContainer
                 position="top-center"
-                autoClose={ 2200 }
+                autoClose={ 1400 }
             />
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -114,7 +113,7 @@ const SellerForm = () => {
                             </label>
                             <div className="mt-1">
                                 <input
-                                    type="number"
+                                    type="text"
                                     name="phoneNumber"
                                     { ...register( "phoneNumber", { required: "This field is required" } ) }
                                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -261,12 +260,7 @@ const SellerForm = () => {
                                 Submit
                             </button>
                         </div>
-                        <div className={ `${ styles.noramlFlex } w-full` }>
-                            <h4>Already have an account?</h4>
-                            <Link to="/shop-login" className="text-blue-600 pl-2">
-                                Sign in
-                            </Link>
-                        </div>
+
                     </form>
                 </div>
             </div>
